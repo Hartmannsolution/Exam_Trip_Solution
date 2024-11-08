@@ -1,10 +1,12 @@
 package dk.cphbusiness.rest;
 
+import dk.cphbusiness.persistence.HibernateConfig;
 import dk.cphbusiness.persistence.model.Trip;
 import dk.cphbusiness.rest.controllers.GuideController;
 import dk.cphbusiness.rest.controllers.TripController;
 import dk.cphbusiness.rest.controllers.TripMockController;
 import dk.cphbusiness.security.SecurityRoutes.Role;
+import dk.cphbusiness.utils.Populator;
 import io.javalin.apibuilder.EndpointGroup;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -22,6 +24,10 @@ public class RestRoutes {
     public EndpointGroup getTripRoutes() {
         return () -> {
             path("/", () -> {
+                path("populate", () -> {
+                    get("/trips", (ctx)-> {new Populator().createTripsAndGuides(HibernateConfig.getEntityManagerFactory()); ctx.json("\"msg\":\"Success\"");}, Role.ANYONE);        // GET /mock/populate
+                    get("/users", (ctx)-> {new Populator().createUsersAndRoles(HibernateConfig.getEntityManagerFactory()); ctx.json("\"msg\":\"Success\"");}, Role.ANYONE);        // GET /mock/populate
+                });
                 path("guides", () -> {
                     get("/", guideController.getAll(), Role.ANYONE);        // GET /mock/guides
                     post("/", guideController.create(), Role.ADMIN);        // POST /mock/guides
