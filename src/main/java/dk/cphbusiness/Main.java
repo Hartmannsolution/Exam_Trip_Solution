@@ -12,13 +12,14 @@ public class Main {
         ApplicationConfig
                 .getInstance()
                 .initiateServer()
-//                .checkSecurityRoles() // check for role when route is called
-//                .setRoute(SecurityRoutes.getSecurityRoutes())
-//                .setRoute(SecurityRoutes.getSecuredRoutes())
+                .checkSecurityRoles() // check for role when route is called
+                .setRoute(SecurityRoutes.getSecurityRoutes())
+                .setRoute(SecurityRoutes.getSecuredRoutes())
                 .setRoute(new RestRoutes().getTripRoutes())
-                .startServer(7007)
+                .startServer(7070)
                 .setCORS()
                 .setGeneralExceptionHandling()
                 .setApiExceptionHandling();
+
     }
 }
