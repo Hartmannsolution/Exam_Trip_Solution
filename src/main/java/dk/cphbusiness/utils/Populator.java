@@ -75,9 +75,9 @@ public class Populator {
         tripDAO = TripDAO.getTripDAO(emf);
         guideDAO = GuideDAO.getGuideDAO(emf);
         tripGuideDAO = TripDAO.getTripGuideDAO(emf);
-        trip1 = new TripDTO( LocalDateTime.now(), LocalDateTime.now(), 12.34, 56.78, "Beach Day", 150.00, 1L, Trip.TripCategory.BEACH, null);
-        trip2 = new TripDTO( LocalDateTime.now(), LocalDateTime.now(), 13.45, 57.89, "City Tour", 200.00, 1L, Trip.TripCategory.CITY, null);
-        trip3 = new TripDTO( LocalDateTime.now(), LocalDateTime.now(), 14.56, 58.90, "Forest Adventure", 180.00, 2L, Trip.TripCategory.FOREST, null);
+        trip1 = new TripDTO( LocalDateTime.now(), LocalDateTime.now().plusDays(1), 12.34, 56.78, "Beach Day", 150.00, 1L, Trip.TripCategory.BEACH, null);
+        trip2 = new TripDTO( LocalDateTime.now(), LocalDateTime.now().plusDays(2), 13.45, 57.89, "City Tour", 200.00, 1L, Trip.TripCategory.CITY, null);
+        trip3 = new TripDTO( LocalDateTime.now(), LocalDateTime.now().plusDays(3), 14.56, 58.90, "Forest Adventure", 180.00, 2L, Trip.TripCategory.FOREST, null);
         guide1 = new GuideDTO("John", "Doe", "john@mail.com", "12345678", 10);
         guide2 = new GuideDTO("Jane", "Doe", "jdo@mail.com", "12345678", 11);
         guide3 = new GuideDTO("Jack", "Swan", "jsw@mail.com", "12345678", 12);

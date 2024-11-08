@@ -2,7 +2,7 @@
 
 ###
 # Get all trips
-GET http://localhost:7007/api/trips
+GET http://localhost:7070/api/trips
 ###
 # Get all guides
 GET http://localhost:7007/api/guides
@@ -15,7 +15,7 @@ GET http://localhost:7007/api/mock/trips
 GET http://localhost:7007/api/mock/trips/31410822-8df0-43e6-9be4-17b8ca361864
 ###
 # Create a new trip
-POST http://localhost:7007/api/mock/trips
+POST http://localhost:7070/api/mock/trips
 #Authorization: Bearer {{token}}
 
 {

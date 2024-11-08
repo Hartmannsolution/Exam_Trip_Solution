@@ -1,10 +1,14 @@
 package dk.cphbusiness.rest;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dk.cphbusiness.exceptions.ApiException;
 import dk.cphbusiness.security.ISecurityController;
 import dk.cphbusiness.security.SecurityController;
+import dk.cphbusiness.utils.Utils;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.EndpointGroup;
 import io.javalin.config.JavalinConfig;
@@ -12,6 +16,7 @@ import io.javalin.http.Context;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 import dk.cphbusiness.security.SecurityRoutes.Role;
+import io.javalin.json.JavalinJackson;
 
 /**
  * Purpose: To configure the Javalin server
@@ -37,6 +42,13 @@ public class ApplicationConfig {
     public ApplicationConfig initiateServer() {
         app = Javalin.create(config -> {
             javalinConfig = config;
+            // Set the Jackson ObjectMapper to represent DateTime with String
+            config.jsonMapper(new JavalinJackson().updateMapper(mapper -> {
+                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                mapper.registerModule(new JavaTimeModule());
+                mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                mapper.writer().withDefaultPrettyPrinter();
+            }));
             config.bundledPlugins.enableDevLogging(); // enables extensive development logging in terminal
             config.staticFiles.add("/public"); // enables serving of static files from the public folder in the classpath. PROs: easy to use, CONs: you have to restart the server every time you change a file
             config.http.defaultContentType = "application/json"; // default content type for requests
