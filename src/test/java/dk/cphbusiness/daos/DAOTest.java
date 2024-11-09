@@ -92,7 +92,7 @@ class DAOTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertEquals(4, tripDAO.getAll().size());
+        assertEquals(11, tripDAO.getAll().size());
     }
 
     @Test
@@ -110,7 +110,7 @@ class DAOTest {
     @Test
     @DisplayName("Test that we can get all trips")
     void getAll() {
-        assertEquals(3, tripDAO.getAll().size());
+        assertEquals(10, tripDAO.getAll().size());
     }
 
     @Test
@@ -122,7 +122,7 @@ class DAOTest {
         } catch (EntityNotFoundException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("Beach Day", trip.getName());
+        assertEquals("Beach Holiday", trip.getName());
     }
 
     @Test
@@ -147,7 +147,7 @@ class DAOTest {
         try {
             trip = tripDAO.findById(populatedTrips.get("trip1").getId());
             tripDAO.delete(trip);
-            assertEquals(2, tripDAO.getAll().size());
+            assertEquals(9, tripDAO.getAll().size());
         } catch (EntityNotFoundException e) {
             fail("Trip not found");
         }

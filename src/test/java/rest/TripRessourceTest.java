@@ -111,7 +111,7 @@ public class TripRessourceTest {
                 .get("/trips").then()
                 .log().all()
                 .statusCode(200)
-                .body("size()", equalTo(3));
+                .body("size()", equalTo(10));
     }
 
     @Test
@@ -264,7 +264,7 @@ public class TripRessourceTest {
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200)
-                .body("size()", equalTo(2));
+                .body("size()", equalTo(3));
     }
 
     @Test
