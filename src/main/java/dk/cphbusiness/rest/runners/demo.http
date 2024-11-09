@@ -1,4 +1,7 @@
 # Test MockTripRoutes API
+## Populate 10 trips with 3 guides
+GET http://localhost:7070/api/populate/trips
+###
 
 ###
 # Get all trips

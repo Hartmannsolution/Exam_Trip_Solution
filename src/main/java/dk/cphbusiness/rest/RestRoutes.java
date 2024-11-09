@@ -25,8 +25,8 @@ public class RestRoutes {
         return () -> {
             path("/", () -> {
                 path("populate", () -> {
-                    get("/trips", (ctx)-> {new Populator().createTripsAndGuides(HibernateConfig.getEntityManagerFactory()); ctx.json("\"msg\":\"Success\"");}, Role.ANYONE);        // GET /mock/populate
-                    get("/users", (ctx)-> {new Populator().createUsersAndRoles(HibernateConfig.getEntityManagerFactory()); ctx.json("\"msg\":\"Success\"");}, Role.ANYONE);        // GET /mock/populate
+                    get("/trips", (ctx)-> {new Populator().createTripsAndGuides(HibernateConfig.getEntityManagerFactory()); ctx.json("{\"msg\":\"Success\"}");}, Role.ANYONE);        // GET /mock/populate
+                    get("/users", (ctx)-> {new Populator().createUsersAndRoles(HibernateConfig.getEntityManagerFactory()); ctx.json("{\"msg\":\"Success\"}");}, Role.ANYONE);        // GET /mock/populate
                 });
                 path("guides", () -> {
                     get("/", guideController.getAll(), Role.ANYONE);        // GET /mock/guides
