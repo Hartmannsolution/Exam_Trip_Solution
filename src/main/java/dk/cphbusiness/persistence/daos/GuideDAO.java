@@ -6,10 +6,10 @@ package dk.cphbusiness.persistence.daos;
  * @author: Thomas Hartmann
  */
 import dk.cphbusiness.dtos.GuideDTO;
-import dk.cphbusiness.exceptions.EntityNotFoundException;
 import dk.cphbusiness.persistence.model.Guide; // Assuming there's a Guide entity class
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 
 import javax.lang.model.UnknownEntityException;

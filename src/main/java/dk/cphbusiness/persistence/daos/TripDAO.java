@@ -1,11 +1,11 @@
 package dk.cphbusiness.persistence.daos;
 
 import dk.cphbusiness.dtos.TripDTO;
-import dk.cphbusiness.exceptions.EntityNotFoundException;
 import dk.cphbusiness.persistence.model.Guide;
 import dk.cphbusiness.persistence.model.Trip;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 
 import javax.lang.model.UnknownEntityException;
@@ -44,9 +44,11 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
     @Override
     public TripDTO findById(Object id) throws EntityNotFoundException {
         try (EntityManager em = emf.createEntityManager()) {
-            return new TripDTO(em.find(Trip.class, id));
-        } catch (UnknownEntityException e) {
-            throw new EntityNotFoundException("Unknown entity with id: " + id);
+            Trip found = em.find(Trip.class, id);
+            if (found == null) {
+                throw new EntityNotFoundException("Unknown entity with id: " + id);
+            }
+            return new TripDTO(found);
         }
     }
 
@@ -77,12 +79,12 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
     }
 
     @Override
-    public TripDTO update(TripDTO dto) throws jakarta.persistence.EntityNotFoundException {
+    public TripDTO update(TripDTO tripDTO) throws EntityNotFoundException {
         try (EntityManager em = emf.createEntityManager()) {
-            Trip trip = TripDTO.toEntity(dto);
+            Trip trip = TripDTO.toEntity(tripDTO);
             Trip found = em.find(Trip.class, trip.getId());
             if(found == null) {
-                throw new jakarta.persistence.EntityNotFoundException();
+                throw new EntityNotFoundException("Trip not found with id: " + tripDTO.getId());
             }
             em.getTransaction().begin();
             Trip merged = em.merge(trip);
@@ -92,12 +94,12 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
     }
 
     @Override
-    public void delete(TripDTO dto) throws jakarta.persistence.EntityNotFoundException {
+    public void delete(TripDTO tripDTO) throws EntityNotFoundException {
         try (EntityManager em = emf.createEntityManager()) {
-            Trip trip = TripDTO.toEntity(dto);
+            Trip trip = TripDTO.toEntity(tripDTO);
             Trip found = em.find(Trip.class, trip.getId());
             if(found == null) {
-                throw new jakarta.persistence.EntityNotFoundException();
+                throw new EntityNotFoundException();
             }
             em.getTransaction().begin();
             em.remove(found);

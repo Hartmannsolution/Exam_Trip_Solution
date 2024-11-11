@@ -1,8 +1,7 @@
 package dk.cphbusiness.persistence.daos;
 
 import dk.cphbusiness.dtos.TripDTO;
-import dk.cphbusiness.exceptions.EntityNotFoundException;
-import dk.cphbusiness.persistence.model.Trip;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.Set;
 

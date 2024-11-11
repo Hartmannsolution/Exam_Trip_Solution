@@ -2,7 +2,6 @@ package dk.cphbusiness.daos;
 
 import dk.cphbusiness.dtos.GuideDTO;
 import dk.cphbusiness.dtos.TripDTO;
-import dk.cphbusiness.exceptions.EntityNotFoundException;
 import dk.cphbusiness.persistence.daos.GuideDAO;
 import dk.cphbusiness.persistence.daos.IDAO;
 import dk.cphbusiness.persistence.daos.ITripGuideDAO;
@@ -16,6 +15,7 @@ import dk.cphbusiness.security.SecurityController;
 import dk.cphbusiness.security.SecurityDAO;
 import jakarta.persistence.EntityManagerFactory;
 import dk.cphbusiness.persistence.HibernateConfig;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDateTime;
@@ -120,7 +120,7 @@ class DAOTest {
         try {
             trip = tripDAO.findById(populatedTrips.get("trip1").getId());
         } catch (EntityNotFoundException e) {
-            throw new RuntimeException(e);
+            fail("Trip not found");
         }
         assertEquals("Beach Holiday", trip.getName());
     }

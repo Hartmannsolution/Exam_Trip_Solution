@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public interface IDAO<T> {
 
-    T findById(Object id) throws EntityNotFoundException, dk.cphbusiness.exceptions.EntityNotFoundException;
+    T findById(Object id) throws EntityNotFoundException;
 
     Set<T> getAll();
 
