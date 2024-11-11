@@ -1,5 +1,6 @@
 package dk.cphbusiness.security;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dk.bugelhartmann.*;
@@ -17,7 +18,12 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Base64;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 /**
@@ -84,6 +90,7 @@ public class SecurityController implements ISecurityController {
 
     /**
      * Purpose: For a user to prove who they are with a valid token
+     *
      * @return
      */
     @Override
@@ -97,8 +104,8 @@ public class SecurityController implements ISecurityController {
                 return;
             }
             // If the endpoint is not protected with roles or is open to ANYONE role, then skip
-            Set<String> allowedRoles = ctx.routeRoles().stream().map(role->role.toString().toUpperCase()).collect(Collectors.toSet());
-            if(isOpenEndpoint(allowedRoles))
+            Set<String> allowedRoles = ctx.routeRoles().stream().map(role -> role.toString().toUpperCase()).collect(Collectors.toSet());
+            if (isOpenEndpoint(allowedRoles))
                 return;
 
             // If there is no token we do not allow entry
@@ -126,6 +133,7 @@ public class SecurityController implements ISecurityController {
 
     /**
      * Purpose: To check if the Authenticated user has the rights to access a protected endpoint
+     *
      * @return
      */
     @Override
@@ -149,10 +157,71 @@ public class SecurityController implements ISecurityController {
             }
 
             // 3. See if any role matches
-            if(!userHasAllowedRole(user, allowedRoles))
-                throw new ForbiddenResponse("User was not authorized with roles: "+ user.getRoles()+". Needed roles are: "+ allowedRoles);
+            if (!userHasAllowedRole(user, allowedRoles))
+                throw new ForbiddenResponse("User was not authorized with roles: " + user.getRoles() + ". Needed roles are: " + allowedRoles);
 //                throw new ApiException(403,"User was not authorized with roles: "+ user.getRoles()+". Needed roles are: "+ allowedRoles);
 
+        };
+    }
+
+
+    @Override
+    public Handler verify() {
+        return (ctx) -> {
+            String header = ctx.header("Authorization");
+            if (header == null) {
+                throw new UnauthorizedResponse("Authorization header is missing");
+            }
+            String token = header.split(" ")[1];
+            if (token == null) {
+                throw new UnauthorizedResponse("Authorization header is malformed");
+            }
+            UserDTO verifiedTokenUser = verifyToken(token);
+            if (verifiedTokenUser == null) {
+                throw new UnauthorizedResponse("Invalid user or token");
+            }
+            ctx.status(200).json(objectMapper.createObjectNode().put("msg", "Token is valid"));
+        };
+    }
+
+    @Override
+    public Handler timeToLive() {
+        return (ctx) -> {
+            String header = ctx.header("Authorization");
+            if (header == null) {
+                throw new UnauthorizedResponse("Authorization header is missing");
+            }
+            String token = header.split(" ")[1];
+            if (token == null) {
+                throw new UnauthorizedResponse("Authorization header is malformed");
+            }
+
+            UserDTO verifiedTokenUser = verifyToken(token);
+            if (verifiedTokenUser == null) {
+                throw new UnauthorizedResponse("Invalid user or token");
+            }
+
+            String[] chunks = token.split("\\.");
+            if (chunks.length != 3) {
+                throw new UnauthorizedResponse("Token is not valid");
+            }
+
+            Base64.Decoder decoder = Base64.getUrlDecoder();
+            String jwtHeader = new String(decoder.decode(chunks[0]));
+            String payload = new String(decoder.decode(chunks[1]));
+            JsonNode node = objectMapper.readTree(payload);
+            Long time = node.get("exp").asLong();
+            LocalDateTime expireTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(time), TimeZone.getDefault().toZoneId());
+            ZonedDateTime ztime = expireTime.atZone(TimeZone.getDefault().toZoneId());
+            ZonedDateTime now = ZonedDateTime.now();
+            Long difference = ztime.toEpochSecond() - now.toEpochSecond();
+
+
+            ctx.status(200)
+                    .json(objectMapper.createObjectNode()
+                            .put("msg", "Token is valid until: " + ztime)
+                            .put("expireTime", ztime.toOffsetDateTime().toString())
+                            .put("secondsToLive", difference));
         };
     }
 
@@ -174,43 +243,41 @@ public class SecurityController implements ISecurityController {
         return false;
     }
 
-    @Override
-        public String createToken (UserDTO user){
-            try {
-                String ISSUER;
-                String TOKEN_EXPIRE_TIME;
-                String SECRET_KEY;
+    private String createToken(UserDTO user) {
+        try {
+            String ISSUER;
+            String TOKEN_EXPIRE_TIME;
+            String SECRET_KEY;
 
-                if (System.getenv("DEPLOYED") != null) {
-                    ISSUER = System.getenv("ISSUER");
-                    TOKEN_EXPIRE_TIME = System.getenv("TOKEN_EXPIRE_TIME");
-                    SECRET_KEY = System.getenv("SECRET_KEY");
-                } else {
-                    ISSUER = Utils.getPropertyValue("ISSUER", "config.properties");
-                    TOKEN_EXPIRE_TIME = Utils.getPropertyValue("TOKEN_EXPIRE_TIME", "config.properties");
-                    SECRET_KEY = Utils.getPropertyValue("SECRET_KEY", "config.properties");
-                }
-                return tokenSecurity.createToken(user, ISSUER, TOKEN_EXPIRE_TIME, SECRET_KEY);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ApiException(500, "Could not create token");
+            if (System.getenv("DEPLOYED") != null) {
+                ISSUER = System.getenv("ISSUER");
+                TOKEN_EXPIRE_TIME = System.getenv("TOKEN_EXPIRE_TIME");
+                SECRET_KEY = System.getenv("SECRET_KEY");
+            } else {
+                ISSUER = Utils.getPropertyValue("ISSUER", "config.properties");
+                TOKEN_EXPIRE_TIME = Utils.getPropertyValue("TOKEN_EXPIRE_TIME", "config.properties");
+                SECRET_KEY = Utils.getPropertyValue("SECRET_KEY", "config.properties");
             }
-        }
-
-        @Override
-        public UserDTO verifyToken (String token){
-            boolean IS_DEPLOYED = (System.getenv("DEPLOYED") != null);
-            String SECRET = IS_DEPLOYED ? System.getenv("SECRET_KEY") : Utils.getPropertyValue("SECRET_KEY", "config.properties");
-
-            try {
-                if (tokenSecurity.tokenIsValid(token, SECRET) && tokenSecurity.tokenNotExpired(token)) {
-                    return tokenSecurity.getUserWithRolesFromToken(token);
-                } else {
-                    throw new NotAuthorizedException(403, "Token is not valid");
-                }
-            } catch (ParseException | NotAuthorizedException | TokenVerificationException e) {
-                e.printStackTrace();
-                throw new ApiException(HttpStatus.UNAUTHORIZED.getCode(), "Unauthorized. Could not verify token");
-            }
+            return tokenSecurity.createToken(user, ISSUER, TOKEN_EXPIRE_TIME, SECRET_KEY);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ApiException(500, "Could not create token");
         }
     }
+
+    private UserDTO verifyToken(String token) {
+        boolean IS_DEPLOYED = (System.getenv("DEPLOYED") != null);
+        String SECRET = IS_DEPLOYED ? System.getenv("SECRET_KEY") : Utils.getPropertyValue("SECRET_KEY", "config.properties");
+
+        try {
+            if (tokenSecurity.tokenIsValid(token, SECRET) && tokenSecurity.tokenNotExpired(token)) {
+                return tokenSecurity.getUserWithRolesFromToken(token);
+            } else {
+                throw new NotAuthorizedException(403, "Token is not valid");
+            }
+        } catch (ParseException | NotAuthorizedException | TokenVerificationException e) {
+            e.printStackTrace();
+            throw new ApiException(HttpStatus.UNAUTHORIZED.getCode(), "Unauthorized. Could not verify token");
+        }
+    }
+}

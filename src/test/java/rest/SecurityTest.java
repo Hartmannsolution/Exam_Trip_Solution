@@ -159,4 +159,34 @@ public class SecurityTest {
                 .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("Test verify endpoint")
+    public void testVerifyEndpoint() {
+        login("user", "user123");
+        given()
+                .contentType("application/json")
+                .accept("application/json")
+                .header("Authorization", "Bearer "+securityToken)
+                .when()
+                .get("/auth/verify").then()
+                .log().all()
+                .statusCode(200)
+                .body("msg", equalTo("Token is valid"));
+    }
+
+    @Test
+    @DisplayName("Test time to live")
+    public void testTimeToLive() {
+        login("user", "user123");
+        given()
+                .contentType("application/json")
+                .accept("application/json")
+                .header("Authorization", "Bearer "+securityToken)
+                .when()
+                .get("/auth/tokenlifespan").then()
+                .log().all()
+                .statusCode(200)
+                .body("secondsToLive", is(both(greaterThan(1700)).and(lessThanOrEqualTo(1800))));
+    }
 }
