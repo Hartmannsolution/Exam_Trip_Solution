@@ -179,6 +179,7 @@ public class Populator {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             em.createQuery("DELETE FROM Booking b").executeUpdate();  // Delete previous bookings
+            em.createNativeQuery("ALTER SEQUENCE bookings_booking_id_seq RESTART WITH 1").executeUpdate();
             em.getTransaction().commit();
         }
 

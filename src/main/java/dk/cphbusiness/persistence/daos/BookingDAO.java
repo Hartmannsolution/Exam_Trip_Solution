@@ -4,8 +4,6 @@ import dk.cphbusiness.dtos.BookingDTO;
 import dk.cphbusiness.persistence.model.Booking;
 import dk.cphbusiness.persistence.HibernateConfig;
 import dk.cphbusiness.persistence.model.Participant;
-import dk.cphbusiness.persistence.model.Trip;
-import dk.cphbusiness.persistence.model.User;
 import dk.cphbusiness.service.EntityMapper;
 import jakarta.persistence.*;
 
@@ -89,7 +87,7 @@ public class BookingDAO implements IDAO<BookingDTO>, IBookingSelector {
                     .dtoToBooking(dto);
             try {
                 tx.begin();
-                if (booking.getBookingId() == null) {
+                if (booking.getId() == null) {
                     throw new EntityNotFoundException("Booking with ID " + dto.getId() + " not found");
                 }
                 booking = em.merge(booking);

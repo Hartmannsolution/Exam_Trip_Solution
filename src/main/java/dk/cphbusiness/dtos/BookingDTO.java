@@ -1,8 +1,6 @@
 package dk.cphbusiness.dtos;
 
 import dk.cphbusiness.persistence.model.Booking;
-import dk.cphbusiness.persistence.model.Participant;
-import dk.cphbusiness.persistence.model.Trip;
 import dk.cphbusiness.utils.IIdProvider;
 import lombok.*;
 
@@ -20,7 +18,7 @@ public class BookingDTO implements IIdProvider<Long> {
     private String comment;
 
     public BookingDTO(Booking booking) {
-        if(booking.getBookingId() != null) this.id = booking.getBookingId();
+        if(booking.getId() != null) this.id = booking.getId();
         if (booking.getParticipant() != null) {
             this.participant = new ParticipantDTO(booking.getParticipant());
         }

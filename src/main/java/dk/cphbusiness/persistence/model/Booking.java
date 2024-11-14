@@ -28,7 +28,7 @@ public class Booking implements Serializable,  IIdProvider<Long> {
     @Id
     @Column(name = "booking_id", length = 25)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bookingId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "username")
@@ -52,6 +52,6 @@ public class Booking implements Serializable,  IIdProvider<Long> {
 
     @Override
     public Long getId() {
-        return bookingId;
+        return id;
     }
 }

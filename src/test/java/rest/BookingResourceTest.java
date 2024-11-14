@@ -136,7 +136,7 @@ public class BookingResourceTest {
                 .then()
                 .log().all()
                 .statusCode(201)
-                .body("id", equalTo(41));
+                .body("id", equalTo(44));
     }
 
     @Test

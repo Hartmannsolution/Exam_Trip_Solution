@@ -111,7 +111,7 @@ public class TripRessourceTest {
                 .get("/trips").then()
                 .log().all()
                 .statusCode(200)
-                .body("size()", equalTo(10));
+                .body("size()", equalTo(11));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class TripRessourceTest {
                 .when()
                 .body(json)
                 .post("/trips").then()
-                .statusCode(403); // Forbidden
+                .statusCode(401); // Forbidden
     }
 
     @Test

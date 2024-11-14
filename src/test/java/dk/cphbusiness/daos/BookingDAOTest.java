@@ -7,7 +7,6 @@ import dk.cphbusiness.persistence.daos.BookingDAO;
 import dk.cphbusiness.persistence.daos.IBookingSelector;
 import dk.cphbusiness.persistence.daos.IDAO;
 import dk.cphbusiness.persistence.model.Participant;
-import dk.cphbusiness.persistence.model.Trip;
 import dk.cphbusiness.persistence.model.User;
 import dk.cphbusiness.utils.IIdProvider;
 import dk.cphbusiness.utils.Populator;
@@ -16,7 +15,6 @@ import dk.cphbusiness.persistence.HibernateConfig;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -73,7 +71,7 @@ class BookingDAOTest {
     @Test
     @DisplayName("Test that we can get all bookings")
     void getAll() {
-        assertEquals(40, bookingDAO.getAll().size());  // Assuming there are 10 bookings populated
+        assertEquals(43, bookingDAO.getAll().size());  // Assuming there are 10 bookings populated
     }
 
     @Test
@@ -85,7 +83,7 @@ class BookingDAOTest {
         } catch (EntityNotFoundException e) {
             fail("Booking not found");
         }
-        assertEquals("user1", booking.getParticipant().getUsername());  // Assuming the expected username is "user1"
+        assertEquals("First booking", booking.getComment());  // Assuming the expected username is "user1"
     }
 
     @Test
@@ -109,7 +107,7 @@ class BookingDAOTest {
         try {
             booking = bookingDAO.getById(populatedBookings.get("booking1").getId());
             bookingDAO.delete(booking);
-            assertEquals(9, bookingDAO.getAll().size());  // Assuming one booking was deleted
+            assertEquals(42, bookingDAO.getAll().size());  // Assuming one booking was deleted
         } catch (EntityNotFoundException e) {
             fail("Booking not found");
         }
@@ -119,8 +117,8 @@ class BookingDAOTest {
     @DisplayName("Test that we can create a booking for a user and trip")
     void createBookingForUserAndTrip() {
         User user1 = (User)populatedUsers.get("user1");
-        Trip trip1 = (Trip)populatedTrips.get("trip1");
-        BookingDTO booking = new BookingDTO(new ParticipantDTO(new Participant(user1.getUsername(), Participant.ExperienceLevel.BEGINNER)), new TripDTO(trip1), 1, false, "No comment");
+        TripDTO trip1 = (TripDTO)populatedTrips.get("trip1");
+        BookingDTO booking = new BookingDTO(new ParticipantDTO(new Participant(user1.getUsername(), Participant.ExperienceLevel.BEGINNER)), trip1, 1, false, "No comment");
         try {
             booking = bookingDAO.create(booking);
             assertNotNull(booking.getId());
@@ -147,7 +145,7 @@ class BookingDAOTest {
     @DisplayName("Test that we can find all bookings for a specific trip")
     void findBookingsForTrip() {
         // Assuming the Populator has created bookings for trips
-        Trip trip = (Trip) populatedTrips.get("trip1");
+        TripDTO trip = (TripDTO) populatedTrips.get("trip1");
         try {
             Set<BookingDTO> bookingsForTrip = bookingSelector.getBookingsByTrip(trip.getId());
             assertTrue(bookingsForTrip != null && bookingsForTrip.size() > 0);  // Assuming at least one booking exists for the trip

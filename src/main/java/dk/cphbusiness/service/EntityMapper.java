@@ -52,7 +52,7 @@ public class EntityMapper {
         Trip tripEntity = TripDTO.toEntity(tripDTO);
 
         Booking booking = new Booking(participantEntity, tripEntity, bookingDTO.getNumberOfParticipants(), bookingDTO.isPaid(), bookingDTO.getComment());
-        booking.setBookingId(bookingDTO.getId());
+        booking.setId(bookingDTO.getId());
 
         return booking;
     }
