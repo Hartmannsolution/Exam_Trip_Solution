@@ -39,7 +39,7 @@ public class GuideController implements IController {
     public Handler getById() {
         return ctx -> {
             Long id = Long.parseLong(ctx.pathParam("id"));
-            GuideDTO guide = guideDAO.findById(id);
+            GuideDTO guide = guideDAO.getById(id);
             if (guide == null) {
                 ctx.attribute("msg", "No guide with that id");
                 throw new ApiException(404, "No guide with that id");
@@ -73,7 +73,7 @@ public class GuideController implements IController {
     public Handler delete() {
         return ctx -> {
             Long id = Long.parseLong(ctx.pathParam("id"));
-            GuideDTO guide = guideDAO.findById(id);
+            GuideDTO guide = guideDAO.getById(id);
             if (guide == null) {
                 throw new ApiException(404, "No guide with that id");
             }

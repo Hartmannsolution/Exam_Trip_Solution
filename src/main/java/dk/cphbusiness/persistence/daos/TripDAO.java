@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * @author: Thomas Hartmann
  */
 public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
+
     private EntityManagerFactory emf;
     private static IDAO tripDAO;
     private static ITripGuideDAO tripGuideDAO;
@@ -36,13 +37,14 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
         if(tripGuideDAO == null) { tripGuideDAO = new TripDAO(_emf); }
         return tripGuideDAO;
     }
+
     // Getter is used in E.G PersonDAO to get emf from super class
     public EntityManagerFactory getEntityManagerFactory() {
         return emf;
     }
     // Queries
     @Override
-    public TripDTO findById(Object id) throws EntityNotFoundException {
+    public TripDTO getById(Object id) throws EntityNotFoundException {
         try (EntityManager em = emf.createEntityManager()) {
             Trip found = em.find(Trip.class, id);
             if (found == null) {

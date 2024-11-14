@@ -10,6 +10,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.awt.print.Book;
 import java.util.Properties;
 
 /**
@@ -40,6 +41,8 @@ public class HibernateConfig {
         configuration.addAnnotatedClass(Role.class);
         configuration.addAnnotatedClass(Trip.class);
         configuration.addAnnotatedClass(Guide.class);
+        configuration.addAnnotatedClass(Booking.class);
+        configuration.addAnnotatedClass(Participant.class);
     }
 
     private static EntityManagerFactory createEMF(boolean forTest) {

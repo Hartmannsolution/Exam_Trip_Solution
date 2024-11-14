@@ -9,7 +9,6 @@ package dk.cphbusiness.rest.controllers;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dk.cphbusiness.dtos.GuideDTO;
 import dk.cphbusiness.dtos.PackingItemDTO;
 import dk.cphbusiness.persistence.daos.IDAO;
 import dk.cphbusiness.persistence.daos.ITripGuideDAO;
@@ -63,7 +62,7 @@ public class TripController implements IController {
     public Handler getById() {
         return ctx -> {
             Long id = Long.parseLong(ctx.pathParam("id"));
-            TripDTO trip = tripDAO.findById(id);
+            TripDTO trip = tripDAO.getById(id);
             if (trip == null) {
                 ctx.attribute("msg", "No trip with that id");
                 throw new ApiException(404, "No trip with that id");
@@ -113,7 +112,7 @@ public class TripController implements IController {
     public Handler delete() {
         return ctx -> {
             Long id = Long.parseLong(ctx.pathParam("id"));
-            TripDTO trip = tripDAO.findById(id);
+            TripDTO trip = tripDAO.getById(id);
             if (trip == null) {
                 throw new ApiException(404, "No trip with that id");
             }

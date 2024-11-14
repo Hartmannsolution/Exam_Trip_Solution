@@ -15,6 +15,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Purpose of this class is to represent a Trip entity
@@ -59,6 +60,9 @@ public class Trip implements IIdProvider<Long> {
     @ManyToOne
     @JoinColumn(name = "guide_id")
     private Guide guide;
+
+    @OneToMany(mappedBy = "trip", fetch = FetchType.EAGER)
+    private Set<Booking> bookings;
 
     @Builder
     public Trip(Long id, String name, LocalDateTime startTime, LocalDateTime endTime, double longitude, double latitude, double price, TripCategory category, Guide guide) {

@@ -2,12 +2,14 @@ package dk.cphbusiness.rest;
 
 import dk.cphbusiness.persistence.HibernateConfig;
 import dk.cphbusiness.persistence.model.Trip;
+import dk.cphbusiness.rest.controllers.BookingController;
 import dk.cphbusiness.rest.controllers.GuideController;
 import dk.cphbusiness.rest.controllers.TripController;
 import dk.cphbusiness.rest.controllers.TripMockController;
 import dk.cphbusiness.security.SecurityRoutes.Role;
 import dk.cphbusiness.utils.Populator;
 import io.javalin.apibuilder.EndpointGroup;
+import jakarta.persistence.EntityManagerFactory;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -20,13 +22,17 @@ public class RestRoutes {
     private final TripMockController tripMockController = new TripMockController();
     private final TripController tripController = TripController.getInstance();
     private final GuideController guideController = GuideController.getInstance();
+    private final BookingController bookingController = BookingController.getInstance();
+    private final Populator populator = new Populator();
+    private final EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
 
     public EndpointGroup getTripRoutes() {
         return () -> {
             path("/", () -> {
                 path("populate", () -> {
-                    get("/trips", (ctx)-> {new Populator().createTripsAndGuides(HibernateConfig.getEntityManagerFactory()); ctx.json("{\"msg\":\"Success\"}");}, Role.ANYONE);        // GET /mock/populate
-                    get("/users", (ctx)-> {new Populator().createUsersAndRoles(HibernateConfig.getEntityManagerFactory()); ctx.json("{\"msg\":\"Success\"}");}, Role.ANYONE);        // GET /mock/populate
+                    get("/trips", (ctx)-> {populator.createTripsAndGuides(emf); ctx.json("{\"msg\":\"Success\"}");}, Role.ANYONE);        // GET /mock/populate
+                    get("/users", (ctx)-> {populator.createUsersAndRoles(emf); ctx.json("{\"msg\":\"Success\"}");}, Role.ANYONE);        // GET /mock/populate
+                    get("/bookings", (ctx)-> {populator.createBookings(emf, populator.createTripsAndGuides(emf), populator.createUsersAndRoles(emf)); ctx.json("{\"msg\":\"Success\"}");}, Role.ANYONE);        // GET /mock/populate
                 });
                 path("guides", () -> {
                     get("/", guideController.getAll(), Role.ANYONE);        // GET /mock/guides
@@ -42,6 +48,16 @@ public class RestRoutes {
                     put("/{id}", tripController.update(), Role.ADMIN);    // PUT /mock/trips/:id
                     delete("/{id}", tripController.delete(), Role.ANYONE); // DELETE /mock/trips/:id
                     put("/trip/{tripId}/guide/{guideId}", tripController.addGuideToTrip(), Role.ANYONE); // POST /mock/trips/:id/guide
+                });
+                path("bookings", () -> {
+                    get("/", bookingController.getAll(), Role.ANYONE);        // GET /mock/trips
+                    get("/sum_of_participants_for_trip/{tripId}", bookingController.getSumParticipantForTrip(), Role.ANYONE);   // GET /mock/trips/:id
+                    get("/{id}", bookingController.getById(), Role.ANYONE);   // GET /mock/trips/:id
+                    get("/get_bookings_by_trip/{tripId}", bookingController.getBookingsByTrip(), Role.ANYONE);   // GET /mock/trips/:id
+                    get("/get_bookings_by_participant/{username}", bookingController.getBookingsByParticipant(), Role.ANYONE);   // GET /mock/trips/:id
+                    post("/", bookingController.create(), Role.ADMIN);        // POST /mock/trips
+                    put("/{id}", bookingController.update(), Role.ADMIN);    // PUT /mock/trips/:id
+                    delete("/{id}", bookingController.delete(), Role.ANYONE); // DELETE /mock/trips/:id
                 });
             });
             path("mock", () -> {

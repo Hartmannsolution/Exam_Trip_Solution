@@ -55,10 +55,11 @@ public class User implements Serializable, ISecurityUser, IIdProvider<String> {
         return BCrypt.checkpw(pw, this.password);
     }
 
-    public User(String userName, String userPass) {
+    public User(String userName, String userPass) { // SecurityDAO.createUser gives user a role: user
         this.username = userName;
         this.password = BCrypt.hashpw(userPass, BCrypt.gensalt());
     }
+
     public User(String userName, Set<Role> roleEntityList) {
         this.username = userName;
         this.roles = roleEntityList;

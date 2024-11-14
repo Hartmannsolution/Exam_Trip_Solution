@@ -43,7 +43,7 @@ public class GuideDAO implements IDAO<GuideDTO> {
 
     // Queries
     @Override
-    public GuideDTO findById(Object id) throws EntityNotFoundException {
+    public GuideDTO getById(Object id) throws EntityNotFoundException {
         try (EntityManager em = emf.createEntityManager()) {
             Guide guide = em.find(Guide.class, id);
             if (guide == null) {

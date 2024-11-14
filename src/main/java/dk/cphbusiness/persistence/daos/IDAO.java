@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public interface IDAO<T> {
 
-    T findById(Object id) throws EntityNotFoundException;
+    T getById(Object id) throws EntityNotFoundException;
 
     Set<T> getAll();
 
@@ -20,5 +20,4 @@ public interface IDAO<T> {
     T update(T t) throws EntityNotFoundException;
 
     void delete(T t) throws EntityNotFoundException;
-
 }

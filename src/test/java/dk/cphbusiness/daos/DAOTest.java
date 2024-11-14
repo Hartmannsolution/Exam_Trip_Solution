@@ -118,7 +118,7 @@ class DAOTest {
     void getById() {
         TripDTO trip = null;
         try {
-            trip = tripDAO.findById(populatedTrips.get("trip1").getId());
+            trip = tripDAO.getById(populatedTrips.get("trip1").getId());
         } catch (EntityNotFoundException e) {
             fail("Trip not found");
         }
@@ -130,7 +130,7 @@ class DAOTest {
     void update() {
         TripDTO trip = null;
         try {
-            trip = tripDAO.findById(populatedTrips.get("trip1").getId());
+            trip = tripDAO.getById(populatedTrips.get("trip1").getId());
             trip.setName("Totally different name");
             TripDTO updated = tripDAO.update(trip);
             assertEquals("Totally different name", updated.getName());
@@ -145,7 +145,7 @@ class DAOTest {
     void delete() {
         TripDTO trip = null;
         try {
-            trip = tripDAO.findById(populatedTrips.get("trip1").getId());
+            trip = tripDAO.getById(populatedTrips.get("trip1").getId());
             tripDAO.delete(trip);
             assertEquals(9, tripDAO.getAll().size());
         } catch (EntityNotFoundException e) {
