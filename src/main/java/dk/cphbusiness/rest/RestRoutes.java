@@ -1,11 +1,7 @@
 package dk.cphbusiness.rest;
 
 import dk.cphbusiness.persistence.HibernateConfig;
-import dk.cphbusiness.persistence.model.Trip;
-import dk.cphbusiness.rest.controllers.BookingController;
-import dk.cphbusiness.rest.controllers.GuideController;
-import dk.cphbusiness.rest.controllers.TripController;
-import dk.cphbusiness.rest.controllers.TripMockController;
+import dk.cphbusiness.rest.controllers.*;
 import dk.cphbusiness.security.SecurityRoutes.Role;
 import dk.cphbusiness.utils.Populator;
 import io.javalin.apibuilder.EndpointGroup;
@@ -23,6 +19,7 @@ public class RestRoutes {
     private final TripController tripController = TripController.getInstance();
     private final GuideController guideController = GuideController.getInstance();
     private final BookingController bookingController = BookingController.getInstance();
+    private final ParticipantController participantController = ParticipantController.getParticipantDAO();
     private final Populator populator = new Populator();
     private final EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
 
@@ -36,16 +33,21 @@ public class RestRoutes {
                 });
                 path("guides", () -> {
                     get("/", guideController.getAll(), Role.ANYONE);        // GET /mock/guides
-                    post("/", guideController.create(), Role.ADMIN);        // POST /mock/guides
-                    put("/{id}", guideController.update(), Role.ADMIN);    // PUT /mock/guides/:id
+                    post("/", guideController.create(), Role.ANYONE);        // POST /mock/guides
+                    put("/{id}", guideController.update(), Role.ANYONE);    // PUT /mock/guides/:id
+                });
+                path("participants", () -> {
+                    get("/", participantController.getAll(), Role.ANYONE);        // GET /mock/guides
+                    post("/", participantController.create(), Role.ANYONE);        // POST /mock/guides
+                    put("/{id}", participantController.update(), Role.ANYONE);    // PUT /mock/guides/:id
                 });
                 path("trips", () -> {
                     get("/", tripController.getAll(), Role.ANYONE);        // GET /mock/trips
                     get("/sumOfTripsForGuides", tripController.getSumOfTripsByGuide(), Role.ANYONE);   // GET /mock/trips/:id
                     get("/{id}", tripController.getById(), Role.ANYONE);   // GET /mock/trips/:id
                     get("/category/{category}", tripController.getFilteredTrips(), Role.ANYONE);   // GET /mock/trips/:id
-                    post("/", tripController.create(), Role.ADMIN);        // POST /mock/trips
-                    put("/{id}", tripController.update(), Role.ADMIN);    // PUT /mock/trips/:id
+                    post("/", tripController.create(), Role.ANYONE);        // POST /mock/trips
+                    put("/{id}", tripController.update(), Role.ANYONE);    // PUT /mock/trips/:id
                     delete("/{id}", tripController.delete(), Role.ANYONE); // DELETE /mock/trips/:id
                     put("/trip/{tripId}/guide/{guideId}", tripController.addGuideToTrip(), Role.ANYONE); // POST /mock/trips/:id/guide
                 });
@@ -55,8 +57,8 @@ public class RestRoutes {
                     get("/{id}", bookingController.getById(), Role.ANYONE);   // GET /mock/trips/:id
                     get("/get_bookings_by_trip/{tripId}", bookingController.getBookingsByTrip(), Role.ANYONE);   // GET /mock/trips/:id
                     get("/get_bookings_by_participant/{username}", bookingController.getBookingsByParticipant(), Role.ANYONE);   // GET /mock/trips/:id
-                    post("/", bookingController.create(), Role.ADMIN);        // POST /mock/trips
-                    put("/{id}", bookingController.update(), Role.ADMIN);    // PUT /mock/trips/:id
+                    post("/", bookingController.create(), Role.ANYONE);        // POST /mock/trips
+                    put("/{id}", bookingController.update(), Role.ANYONE);    // PUT /mock/trips/:id
                     delete("/{id}", bookingController.delete(), Role.ANYONE); // DELETE /mock/trips/:id
                 });
             });

@@ -1,6 +1,5 @@
 package dk.cphbusiness.rest.controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dk.cphbusiness.dtos.BookingDTO;
@@ -13,10 +12,8 @@ import dk.cphbusiness.utils.Utils;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import io.javalin.validation.BodyValidator;
-import jakarta.persistence.EntityNotFoundException;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * REST Controller for BookingDTO.

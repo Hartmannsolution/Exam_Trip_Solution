@@ -132,6 +132,7 @@ public class BookingResourceTest {
                 .header("Authorization", "Bearer " + securityToken)
                 .body(json)
                 .when()
+                .log().all()
                 .post("/bookings")
                 .then()
                 .log().all()

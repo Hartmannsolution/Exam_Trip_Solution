@@ -203,11 +203,16 @@ public class Populator {
                                 .skip((int) (Math.random() * userList.size()))
                                 .findFirst()
                                 .get());
+                // random experience level
+                Participant.ExperienceLevel experienceLevel =
+                        Participant.ExperienceLevel.values()[(int) (Math.random() * Participant.ExperienceLevel.values().length)];
                 try {
                     BookingDTO booking = new BookingDTO(
                             new ParticipantDTO(
                             new Participant(randomUser.getUsername()
-                                    , Participant.ExperienceLevel.BEGINNER))
+                                    , "1234567890"
+                                    , "some"+counter+"one@mail.com"
+                                    , experienceLevel))
                             , (TripDTO) v
                             , (int) (Math.random() * 6)+1
                             , false

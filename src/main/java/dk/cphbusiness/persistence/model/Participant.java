@@ -30,6 +30,8 @@ public class Participant implements Serializable,  IIdProvider<String> {
     @Id
     @Column(name = "username", length = 25)
     private String username;
+    private String phone;
+    private String email;
     private ExperienceLevel level;
 
     @OneToOne
@@ -42,6 +44,13 @@ public class Participant implements Serializable,  IIdProvider<String> {
 
     public Participant(String userName, ExperienceLevel level) {
         this.username = userName;
+        this.level = level;
+    }
+
+    public Participant(String userName, String phone, String email, ExperienceLevel level) {
+        this.username = userName;
+        this.phone = phone;
+        this.email = email;
         this.level = level;
     }
 

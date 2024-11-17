@@ -114,7 +114,7 @@ public class TripRessourceTest {
                 .body("size()", equalTo(11));
     }
 
-    @Test
+//    @Test // Removed because security roles on all endpoints are set to ANYONE now
     @DisplayName("Test POST to Trip Entities not allowed for User role")
     public void testEntitiesFromDBNotAllowed() {
         login("user", "user123");

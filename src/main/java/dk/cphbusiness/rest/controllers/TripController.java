@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.cphbusiness.dtos.PackingItemDTO;
+import dk.cphbusiness.exceptions.ValidationException;
 import dk.cphbusiness.persistence.daos.IDAO;
 import dk.cphbusiness.persistence.daos.ITripGuideDAO;
 import dk.cphbusiness.persistence.daos.TripDAO;
@@ -90,10 +91,16 @@ public class TripController implements IController {
     @Override
     public Handler create() {
         return ctx -> {
-            BodyValidator<TripDTO> validator = ctx.bodyValidator(TripDTO.class);
-            TripDTO trip = validator.get();
-            TripDTO created = tripDAO.create(trip);
-            ctx.json(created).status(HttpStatus.CREATED);
+            try {
+                TripDTO trip = ctx.bodyAsClass(TripDTO.class);
+//                BodyValidator<TripDTO> validator = ctx.bodyValidator(TripDTO.class);
+//                TripDTO trip = validator.get();
+                TripDTO created = tripDAO.create(trip);
+                ctx.json(created).status(HttpStatus.CREATED);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result("An error occurred: " + e.getMessage());
+            }
         };
     }
 

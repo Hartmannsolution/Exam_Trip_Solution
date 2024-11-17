@@ -12,13 +12,28 @@ import lombok.*;
 @ToString
 public class ParticipantDTO {
     private String username;
+    private String phone;
+    private String email;
     private Participant.ExperienceLevel level;
+
+
+
+    public ParticipantDTO(String username, Participant.ExperienceLevel level) {
+        this.username = username;
+        this.level = level;
+    }
+
+    public ParticipantDTO(String username) {
+        this.username = username;
+    }
 
     public ParticipantDTO(Participant participant) {
         this.username = participant.getUsername();
         this.level = participant.getLevel();
+        this.phone = participant.getPhone();
+        this.email = participant.getEmail();
     }
     public static Participant toEntity(ParticipantDTO participantDTO) {
-        return new Participant(participantDTO.getUsername(), participantDTO.getLevel());
+        return new Participant(participantDTO.getUsername(), participantDTO.phone, participantDTO.email, participantDTO.getLevel());
     }
 }

@@ -1,0 +1,48 @@
+POST http://{{url}}/auth/register
+
+{
+    "username": "thomas",
+    "password": "test123"
+}
+###
+POST https://{{url}}/auth/login
+
+{
+    "username": "admin",
+    "password": "admin123"
+}
+> {%
+ client.global.set("token", response.body.token);
+%}
+
+###
+POST http://{{url}}/trips
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "starttime": "2025-11-01T12:00",
+  "endtime": "2025-11-01T14:30",
+  "longitude": 14.56,
+  "latitude": 58.9,
+  "name": "Snowfight by the cabin",
+  "price": 80,
+  "category": "SNOW"
+}
+### Add a guide to a trip
+PUT https://{{url}}/trips/trip/18/guide/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### Get all guides
+GET https://{{url}}/guides
+
+### Delete trip
+DELETE https://{{url}}/trips/11
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### Delete booking
+DELETE https://{{url}}/bookings/24
+Authorization: Bearer {{token}}
+Content-Type: application/json

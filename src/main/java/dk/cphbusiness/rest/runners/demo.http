@@ -67,3 +67,68 @@ POST http://localhost:7007/api/mock/trips/trip/7f912423-a1c1-4a43-aab6-62240aa7e
     "phone": "55555555",
     "yearsOfExperience": 7
 }
+###
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin123"
+}
+> {%
+ client.global.set("token", response.body.token);
+%}
+
+###
+POST {{url}}/trips
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "starttime": "2025-01-03T12:34:06.865979",
+  "endtime": "2025-01-05T12:34:06.865979",
+  "longitude": 14.56,
+  "latitude": 58.9,
+  "name": "Tour de France",
+  "price": 180,
+  "category": "CITY"
+}
+###
+POST {{url}}/mock/trips
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "starttime": "2025-01-03T12:34:06.865979",
+  "endtime": "2025-01-05T12:34:06.865979",
+  "longitude": 14.56,
+  "latitude": 58.9,
+  "name": "Tour de France",
+  "price": 180,
+  "category": "CITY"
+}
+
+### Bookings
+POST {{url}}/bookings
+Content-Type: application/json
+
+{
+"participant": {
+"username": "user1"
+},
+"trip": {
+"id": 11,
+"starttime": "2025-01-27T21:18:46.96481",
+"endtime": "2025-01-30T21:18:46.96481",
+"longitude": 14.94,
+"latitude": 58.75,
+"name": "Test",
+"price": 10.0,
+"category": "CITY",
+"guide": null,
+"packingItems": null
+},
+"numberOfParticipants": 3,
+"comment": "No comment",
+"paid": false
+}

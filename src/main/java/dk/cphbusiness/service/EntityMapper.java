@@ -30,6 +30,7 @@ public class EntityMapper {
             }
 
             if(foundParticipant != null) {
+                foundParticipant.setLevel(participant.getLevel()); // update experience level when booking again
                 return foundParticipant;
             }
 
