@@ -24,25 +24,25 @@ public class TripDTO implements IIdProvider<Long> {
     private GuideDTO guide;
     private Set<PackingItemDTO> packingItems;
 
-    public TripDTO(Long id, LocalDateTime of, LocalDateTime of1, double v, double v1, String day, double v2, long l, Trip.TripCategory category, GuideDTO guide1) {
+    public TripDTO(Long id, LocalDateTime startTime, LocalDateTime endTime, double longitude, double latitude, String name, double price, Trip.TripCategory category, GuideDTO guide1) {
         this.id = id;
-        this.starttime = of;
-        this.endtime = of1;
-        this.longitude = v;
-        this.latitude = v1;
-        this.name = day;
-        this.price = v2;
+        this.starttime = startTime;
+        this.endtime = endTime;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.name = name;
+        this.price = price;
         this.category = category;
         this.guide = guide1;
     }
 
-    public TripDTO( LocalDateTime of, LocalDateTime of1, double v, double v1, String day, double v2, long l, Trip.TripCategory category, GuideDTO guide1) {
-        this.starttime = of;
-        this.endtime = of1;
-        this.longitude = v;
-        this.latitude = v1;
-        this.name = day;
-        this.price = v2;
+    public TripDTO(LocalDateTime startTime, LocalDateTime endTime, double longitude, double latitude, String name, double price, Trip.TripCategory category, GuideDTO guide1) {
+        this.starttime = startTime;
+        this.endtime = endTime;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.name = name;
+        this.price = price;
         this.category = category;
         this.guide = guide1;
     }

@@ -100,8 +100,8 @@ public class Populator {
         ISecurityDAO securityDAO;
         ISecurityController securityController;
 
-        GuideDTO guide1, guide2, guide3;
-        TripDTO trip1, trip2, trip3, trip4, trip5, trip6, trip7, trip8, trip9, trip10, trip11;
+        GuideDTO guide1, guide2, guide3, guide4, guide5;
+        TripDTO trip1, trip2, trip3, trip4, trip5, trip6, trip7, trip8, trip9, trip10, trip11, trip12, trip13, trip14, trip15, trip16, trip17, trip18, trip19, trip20;
         User user, admin, superUser = null;
         emf = HibernateConfig.getEntityManagerFactory();
         securityDAO = new SecurityDAO(emf);
@@ -110,21 +110,32 @@ public class Populator {
         guideDAO = GuideDAO.getGuideDAO(emf);
         tripGuideDAO = TripDAO.getTripGuideDAO(emf);
         LocalDateTime base = LocalDateTime.now();
-        trip1 = new TripDTO(base.plusDays(14), base.plusDays(15), 12.34, 56.78, "Beach Holiday", 150.00, 1L, Trip.TripCategory.BEACH, null);
-        trip2 = new TripDTO(base.plusDays(30), base.plusDays(31), 13.45, 57.89, "City Tour", 200.00, 1L, Trip.TripCategory.CITY, null);
-        trip3 = new TripDTO(base.plusDays(50), base.plusDays(52), 14.56, 58.90, "Forest Adventure", 180.00, 2L, Trip.TripCategory.FOREST, null);
-        trip4 = new TripDTO(base.plusDays(40), base.plusDays(54), 14.96, 58.95, "Forest Climbing", 280.00, 2L, Trip.TripCategory.FOREST, null);
-        trip5 = new TripDTO(base.plusDays(60), base.plusDays(62), 14.94, 58.75, "Forest Dwelling", 780.00, 2L, Trip.TripCategory.FOREST, null);
-        trip6 = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Lake swimming", 130.00, 2L, Trip.TripCategory.LAKE, null);
-        trip7 = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Shark fishing", 510.00, 2L, Trip.TripCategory.SEA, null);
-        trip8 = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Cross Country Skiing", 444.00, 2L, Trip.TripCategory.SNOW, null);
-        trip9 = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Snow boarding", 440.00, 2L, Trip.TripCategory.SNOW, null);
-        trip10 = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Living under a bridge", 10.00, 2L, Trip.TripCategory.CITY, null);
-        trip11 = new TripDTO(base.plusDays(72), base.plusDays(75), 14.94, 58.75, "Test", 10.00, 2L, Trip.TripCategory.CITY, null);
+        trip1  = new TripDTO(base.plusDays(14), base.plusDays(15), 12.34, 56.78, "Beach Holiday", 150.00, Trip.TripCategory.BEACH, null);
+        trip2  = new TripDTO(base.plusDays(30), base.plusDays(31), 13.45, 57.89, "City Tour", 200.00, Trip.TripCategory.CITY, null);
+        trip3  = new TripDTO(base.plusDays(50), base.plusDays(52), 14.56, 58.90, "Forest Adventure", 180.00, Trip.TripCategory.FOREST, null);
+        trip4  = new TripDTO(base.plusDays(40), base.plusDays(54), 14.96, 58.95, "Forest Climbing", 280.00, Trip.TripCategory.FOREST, null);
+        trip5  = new TripDTO(base.plusDays(60), base.plusDays(62), 14.94, 58.75, "Forest Dwelling", 780.00, Trip.TripCategory.FOREST, null);
+        trip6  = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Lake swimming", 130.00, Trip.TripCategory.LAKE, null);
+        trip7  = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Shark fishing", 510.00, Trip.TripCategory.SEA, null);
+        trip8  = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Cross Country Skiing", 444.00, Trip.TripCategory.SNOW, null);
+        trip9  = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.75, "Snow boarding", 440.00, Trip.TripCategory.SNOW, null);
+        trip10 = new TripDTO(base.plusDays(70), base.plusDays(72), 14.94, 58.80, "Living under a bridge", 10.00, Trip.TripCategory.CITY, null);
+        trip11 = new TripDTO(base.plusDays(72), base.plusDays(75), 14.80, 58.81, "Kayaking the canals", 100.00, Trip.TripCategory.CITY, null);
+        trip12 = new TripDTO(base.plusDays(80), base.plusDays(82), 14.80, 58.82, "Church spotting", 120.00, Trip.TripCategory.CITY, null);
+        trip13 = new TripDTO(base.plusDays(82), base.plusDays(84), 14.84, 58.83, "Singles city marathon", 130.00, Trip.TripCategory.CITY, null);
+        trip14 = new TripDTO(base.plusDays(84), base.plusDays(86), 14.84, 58.84, "Relaxing under the palm trees", 140.00, Trip.TripCategory.BEACH, null);
+        trip15 = new TripDTO(base.plusDays(90), base.plusDays(94), 14.73, 58.85, "Sleeping all day at the hotel", 150.00, Trip.TripCategory.BEACH, null);
+        trip16 = new TripDTO(base.plusDays(95), base.plusDays(96), 14.74, 58.86, "Surfing the pacific", 160.00, Trip.TripCategory.BEACH, null);
+        trip17 = new TripDTO(base.plusDays(96), base.plusDays(96), 14.74, 58.87, "Build you own igloo", 170.00, Trip.TripCategory.SNOW, null);
+        trip18 = new TripDTO(base.plusDays(96), base.plusDays(97), 14.77, 58.88, "Ski shooting", 800.00, Trip.TripCategory.SNOW, null);
+        trip19 = new TripDTO(base.plusDays(96), base.plusDays(98), 14.78, 58.89, "Camping in the cold", 900.00, Trip.TripCategory.SNOW, null);
+        trip20 = new TripDTO(base.plusDays(96), base.plusDays(99), 14.44, 58.90, "Living in the trees", 1000.00, Trip.TripCategory.FOREST, null);
 
         guide1 = new GuideDTO("Andreas", "Turkey", "andreas@mail.com", "33293922", 10);
         guide2 = new GuideDTO("Jane", "Doe", "jdo@mail.com", "12345678", 11);
         guide3 = new GuideDTO("Brian", "Swan", "jsw@mail.com", "44993434", 12);
+        guide4 = new GuideDTO("Charlie", "Hawk", "ch@mail.com", "45993434", 7);
+        guide5 = new GuideDTO("Erika", "Falk", "ef@mail.com", "99338877", 4);
         try {
             trip1 = tripDAO.create(trip1);
             trip2 = tripDAO.create(trip2);
@@ -137,10 +148,21 @@ public class Populator {
             trip9 = tripDAO.create(trip9);
             trip10 = tripDAO.create(trip10);
             trip11 = tripDAO.create(trip11);
+            trip12 = tripDAO.create(trip12);
+            trip13 = tripDAO.create(trip13);
+            trip14 = tripDAO.create(trip14);
+            trip15 = tripDAO.create(trip15);
+            trip16 = tripDAO.create(trip16);
+            trip17 = tripDAO.create(trip17);
+            trip18 = tripDAO.create(trip18);
+            trip19 = tripDAO.create(trip19);
+            trip20 = tripDAO.create(trip20);
 
             guide1 = guideDAO.create(guide1);
             guide2 = guideDAO.create(guide2);
             guide3 = guideDAO.create(guide3);
+            guide4 = guideDAO.create(guide4);
+            guide5 = guideDAO.create(guide5);
 
             trip1 = tripGuideDAO.addGuideToTrip(trip1.getId(), guide1.getId());
             trip2 = tripGuideDAO.addGuideToTrip(trip2.getId(), guide1.getId());
@@ -152,7 +174,16 @@ public class Populator {
             trip8 = tripGuideDAO.addGuideToTrip(trip8.getId(), guide3.getId());
             trip9 = tripGuideDAO.addGuideToTrip(trip9.getId(), guide1.getId());
             trip10 = tripGuideDAO.addGuideToTrip(trip10.getId(), guide1.getId());
-            trip10 = tripGuideDAO.addGuideToTrip(trip11.getId(), guide1.getId());
+            trip11 = tripGuideDAO.addGuideToTrip(trip11.getId(), guide1.getId());
+            trip12 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide1.getId());
+            trip13 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide4.getId());
+            trip14 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide4.getId());
+            trip15 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide5.getId());
+            trip16 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide5.getId());
+            trip17 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide4.getId());
+            trip18 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide5.getId());
+            trip19 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide4.getId());
+            trip20 = tripGuideDAO.addGuideToTrip(trip12.getId(), guide5.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,9 +198,20 @@ public class Populator {
         tripsAndGuides.put("trip9", trip9);
         tripsAndGuides.put("trip10", trip10);
         tripsAndGuides.put("trip11", trip11);
+        tripsAndGuides.put("trip12", trip12);
+        tripsAndGuides.put("trip13", trip13);
+        tripsAndGuides.put("trip14", trip14);
+        tripsAndGuides.put("trip15", trip15);
+        tripsAndGuides.put("trip16", trip16);
+        tripsAndGuides.put("trip17", trip17);
+        tripsAndGuides.put("trip18", trip18);
+        tripsAndGuides.put("trip19", trip19);
+        tripsAndGuides.put("trip20", trip20);
         tripsAndGuides.put("guide1", guide1);
         tripsAndGuides.put("guide2", guide2);
         tripsAndGuides.put("guide3", guide3);
+        tripsAndGuides.put("guide4", guide4);
+        tripsAndGuides.put("guide5", guide5);
         return tripsAndGuides;
 //        return Map.of("trip1", trip1, "trip2", trip2, "trip3", trip3, "guide1", guide1, "guide2", guide2, "guide3", guide3);
     }
@@ -192,8 +234,12 @@ public class Populator {
 //        String randomUser = userList.stream().skip((int) (Math.random() * userList.size())).findFirst().get();
 
         AtomicInteger counter = new AtomicInteger(1);
+        // trips contains 20 trips and 5 guides
         trips.forEach((k, v) -> {
-            if(k.equals("trip11")) return; // Skip the last trip (Used for testing)
+            // skip last 5 entries (guides)
+            if(k.startsWith("guide")) return;
+
+            if(k.equals("trip11")) return; // Skip the trip 11 (Used for testing)
 
             // 4 bookings per trip
             for(int i = 0; i < 4; i++) {

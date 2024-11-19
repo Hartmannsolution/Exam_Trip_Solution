@@ -119,6 +119,8 @@ public class BookingResourceTest {
         String json = null;
         ParticipantDTO participant = ((BookingDTO) populatedBookings.get("booking1")).getParticipant();
         TripDTO trip = (TripDTO) populatedTrips.get("trip11");
+        trip.setGuide(null);
+        trip.setPackingItems(null);
         try {
             BookingDTO booking = new BookingDTO(participant, trip, 3, false, "No comment");
             json = objectMapper.writeValueAsString(booking);
@@ -137,7 +139,7 @@ public class BookingResourceTest {
                 .then()
                 .log().all()
                 .statusCode(201)
-                .body("id", equalTo(44));
+                .body("id", equalTo(80));
     }
 
     @Test
@@ -193,6 +195,8 @@ public class BookingResourceTest {
         String json = null;
         ParticipantDTO participant = ((BookingDTO) populatedBookings.get("booking1")).getParticipant();
         TripDTO trip = (TripDTO) populatedTrips.get("trip11");
+        trip.setGuide(null);
+        trip.setPackingItems(null);
         String comment = "";
         try {
             comment = "Updated booking at: "+ LocalDateTime.now();

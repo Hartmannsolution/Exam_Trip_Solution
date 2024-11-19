@@ -111,7 +111,7 @@ public class TripRessourceTest {
                 .get("/trips").then()
                 .log().all()
                 .statusCode(200)
-                .body("size()", equalTo(11));
+                .body("size()", equalTo(20));
     }
 
 //    @Test // Removed because security roles on all endpoints are set to ANYONE now
@@ -120,7 +120,7 @@ public class TripRessourceTest {
         login("user", "user123");
         String json = null;
         try {
-            TripDTO trip = new TripDTO(LocalDateTime.now(), LocalDateTime.now(), 12.34, 56.78, "Park walk", 150.00, 1L, Trip.TripCategory.BEACH, null);
+            TripDTO trip = new TripDTO(LocalDateTime.now(), LocalDateTime.now(), 12.34, 56.78, "Park walk", 150.00, Trip.TripCategory.BEACH, null);
             // Convert the trip object to JSON using jackson object mapper
             json = objectMapper.writeValueAsString(trip);
         } catch (JsonProcessingException ex){
@@ -143,7 +143,7 @@ public class TripRessourceTest {
         login("admin", "admin123");
         String json = null;
         try {
-            TripDTO trip = new TripDTO(LocalDateTime.now(), LocalDateTime.now(), 12.34, 56.78, "Park walk", 150.00, 1L, Trip.TripCategory.BEACH, null);
+            TripDTO trip = new TripDTO(LocalDateTime.now(), LocalDateTime.now(), 12.34, 56.78, "Park walk", 150.00, Trip.TripCategory.BEACH, null);
             // Convert the trip object to JSON using jackson object mapper
             json = objectMapper.writeValueAsString(trip);
         } catch (JsonProcessingException ex){
@@ -249,7 +249,7 @@ public class TripRessourceTest {
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200)
-                .body("size()", equalTo(1));
+                .body("size()", equalTo(4));
     }
 
     @Test
@@ -264,7 +264,7 @@ public class TripRessourceTest {
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200)
-                .body("size()", equalTo(3));
+                .body("size()", equalTo(4));
     }
 
     @Test

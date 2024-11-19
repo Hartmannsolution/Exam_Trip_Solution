@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "participants")
-@NamedQueries(@NamedQuery(name = "Participant.deleteAllRows", query = "DELETE from User"))
+@NamedQueries(@NamedQuery(name = "Participant.deleteAllRows", query = "DELETE from Participant "))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,6 +41,9 @@ public class Participant implements Serializable,  IIdProvider<String> {
 
     @OneToMany(mappedBy = "participant")
     private Set<Booking> bookings = new HashSet<>();
+
+    @OneToMany(mappedBy = "participant")
+    private Set<Rating> ratings = new HashSet<>();
 
     public Participant(String userName, ExperienceLevel level) {
         this.username = userName;

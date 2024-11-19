@@ -35,6 +35,7 @@ public class HibernateConfig {
             emfTest = createEMF(true);
         return emfTest;
     }
+
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
         configuration.addAnnotatedClass(User.class);
@@ -43,6 +44,7 @@ public class HibernateConfig {
         configuration.addAnnotatedClass(Guide.class);
         configuration.addAnnotatedClass(Booking.class);
         configuration.addAnnotatedClass(Participant.class);
+        configuration.addAnnotatedClass(Rating.class);
     }
 
     private static EntityManagerFactory createEMF(boolean forTest) {
@@ -108,7 +110,7 @@ public class HibernateConfig {
         props.put("hibernate.connection.username", "postgres");
         props.put("hibernate.connection.password", "postgres");
         props.put("hibernate.archive.autodetection", "class");
-        props.put("hibernate.show_sql", "true");
+        props.put("hibernate.show_sql", "false");
         props.put("hibernate.hbm2ddl.auto", "create-drop");
         return props;
     }

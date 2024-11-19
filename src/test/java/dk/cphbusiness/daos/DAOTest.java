@@ -86,13 +86,13 @@ class DAOTest {
     @Test
     @DisplayName("Test that we can create a trip")
     void create() {
-        TripDTO trip = new TripDTO( LocalDateTime.now(), LocalDateTime.now(), 15.67, 59.01, "Lake Visit", 220.00, 2L, Trip.TripCategory.LAKE, null);
+        TripDTO trip = new TripDTO( LocalDateTime.now(), LocalDateTime.now(), 15.67, 59.01, "Lake Visit", 220.00, Trip.TripCategory.LAKE, null);
         try {
             tripDAO.create(trip);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertEquals(12, tripDAO.getAll().size());
+        assertEquals(21, tripDAO.getAll().size());
     }
 
     @Test
@@ -104,13 +104,13 @@ class DAOTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertEquals(4, guideDAO.getAll().size());
+    assertEquals(6, guideDAO.getAll().size());
     }
 
     @Test
     @DisplayName("Test that we can get all trips")
     void getAll() {
-        assertEquals(11, tripDAO.getAll().size());
+        assertEquals(20, tripDAO.getAll().size());
     }
 
     @Test
@@ -147,7 +147,7 @@ class DAOTest {
         try {
             trip = tripDAO.getById(populatedTrips.get("trip1").getId());
             tripDAO.delete(trip);
-            assertEquals(10, tripDAO.getAll().size());
+            assertEquals(19, tripDAO.getAll().size());
         } catch (EntityNotFoundException e) {
             fail("Trip not found");
         }
@@ -156,7 +156,7 @@ class DAOTest {
     @Test
     @DisplayName("Test that we can add a guide to a trip")
     void testAddGuide() {
-        TripDTO trip = new TripDTO(LocalDateTime.now(), LocalDateTime.now(), 15.67, 59.01, "Lake Visit", 220.00, 2L, Trip.TripCategory.LAKE, null);
+        TripDTO trip = new TripDTO(LocalDateTime.now(), LocalDateTime.now(), 15.67, 59.01, "Lake Visit", 220.00, Trip.TripCategory.LAKE, null);
         try {
             trip = tripDAO.create(trip);
             GuideDTO guide = ((TripDTO)populatedTrips.get("trip1")).getGuide();

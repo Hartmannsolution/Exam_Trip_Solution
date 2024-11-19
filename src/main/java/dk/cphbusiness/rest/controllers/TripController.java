@@ -159,6 +159,7 @@ public class TripController implements IController {
         return ctx -> {
             Map<String, Double> result = tripDAO.getAll()
                     .stream()
+                    .filter(trip -> trip.getGuide() != null)
                     .collect(Collectors.groupingBy(trip->trip.getGuide().getLastname(), Collectors.summingDouble(TripDTO::getPrice)));
             ctx.json(result).status(HttpStatus.OK);
         };

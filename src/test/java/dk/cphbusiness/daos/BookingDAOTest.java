@@ -71,7 +71,7 @@ class BookingDAOTest {
     @Test
     @DisplayName("Test that we can get all bookings")
     void getAll() {
-        assertEquals(43, bookingDAO.getAll().size());  // Assuming there are 10 bookings populated
+        assertEquals(79, bookingDAO.getAll().size());  // Assuming there are 10 bookings populated
     }
 
     @Test
@@ -107,7 +107,7 @@ class BookingDAOTest {
         try {
             booking = bookingDAO.getById(populatedBookings.get("booking1").getId());
             bookingDAO.delete(booking);
-            assertEquals(42, bookingDAO.getAll().size());  // Assuming one booking was deleted
+            assertEquals(78, bookingDAO.getAll().size());  // Assuming one booking was deleted
         } catch (EntityNotFoundException e) {
             fail("Booking not found");
         }

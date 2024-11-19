@@ -39,16 +39,16 @@ public class TripMockController implements IController {
                 tripIdCounter++, // Use counter to generate ID
                 LocalDateTime.of(2024, 5, 10, 9, 0),
                 LocalDateTime.of(2024, 5, 10, 17, 0),
-                12.34, 56.78, "Beach Day", 150.00, guide1.getId(), Trip.TripCategory.BEACH, guide1);
+                12.34, 56.78, "Beach Day", 150.00, Trip.TripCategory.BEACH, guide1);
 
         TripDTO trip2 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 6, 15, 10, 0), LocalDateTime.of(2024, 6, 15, 18, 0),
-                13.45, 57.89, "City Tour", 200.00, guide1.getId(), Trip.TripCategory.CITY, guide1);
+                13.45, 57.89, "City Tour", 200.00, Trip.TripCategory.CITY, guide1);
 
         TripDTO trip3 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 7, 20, 8, 0), LocalDateTime.of(2024, 7, 20, 16, 0),
-                14.56, 58.90, "Forest Adventure", 180.00, guide2.getId(), Trip.TripCategory.FOREST, guide2);
+                14.56, 58.90, "Forest Adventure", 180.00, Trip.TripCategory.FOREST, guide2);
 
         TripDTO trip4 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 8, 25, 9, 0), LocalDateTime.of(2024, 8, 25, 17, 0),
-                15.67, 59.01, "Lake Visit", 220.00, guide2.getId(), Trip.TripCategory.LAKE, guide2);
+                15.67, 59.01, "Lake Visit", 220.00, Trip.TripCategory.LAKE, guide2);
 
         // Assign trips to guides' list of trips
         guide1.setTrips(List.of(trip1.getName(), trip2.getName()));

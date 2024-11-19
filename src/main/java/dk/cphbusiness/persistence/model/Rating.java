@@ -12,18 +12,17 @@ import java.io.Serializable;
  * Author: Thomas Hartmann
  */
 @Entity
-@Table(name = "bookings")
-@NamedQueries(@NamedQuery(name = "Booking.deleteAllRows", query = "DELETE from Rating"))
+@Table(name = "ratings")
+@NamedQueries(@NamedQuery(name = "Rating.deleteAllRows", query = "DELETE from Rating"))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Booking implements Serializable,  IIdProvider<Long> {
+public class Rating implements Serializable,  IIdProvider<Long> {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
 
     @Id
     @Column(name = "booking_id", length = 25)
@@ -38,20 +37,23 @@ public class Booking implements Serializable,  IIdProvider<Long> {
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
-    private int numberOfParticipants;
-    private boolean isPaid;
+    @Enumerated(EnumType.STRING)
+    private RatingScore ratingScore;
     private String comment;
 
-    public Booking(Participant participant, Trip trip, int numberOfParticipants, boolean isPaid, String comment) {
+    public Rating(Participant participant, Trip trip, RatingScore score, String comment) {
         this.participant = participant;
         this.trip = trip;
-        this.numberOfParticipants = numberOfParticipants;
-        this.isPaid = isPaid;
+        this.ratingScore = score;
         this.comment = comment;
     }
 
     @Override
     public Long getId() {
         return id;
+    }
+
+    public enum RatingScore {
+        ONE, TWO, THREE, FOUR, FIVE
     }
 }
