@@ -35,7 +35,7 @@ public class RestRoutes {
                 });
                 path("trips", () -> {
                     get("/", tripController.getAll(), Role.ANYONE);        // GET /mock/trips
-                    get("/sumOfTripsForGuides", tripController.getSumOfTripsByGuide(), Role.ANYONE);   // GET /mock/trips/:id
+                    get("/sumOfTripsForGuides", tripController.getSumOfTripsByGuide(), Role.USER);   // GET /mock/trips/:id
                     get("/{id}", tripController.getById(), Role.ANYONE);   // GET /mock/trips/:id
                     get("/category/{category}", tripController.getFilteredTrips(), Role.ANYONE);   // GET /mock/trips/:id
                     post("/", tripController.create(), Role.ADMIN);        // POST /mock/trips
