@@ -1,24 +1,24 @@
 # Test MockTripRoutes API
-## Populate 10 trips with 3 guides
-GET http://localhost:7070/api/populate/trips
+### Populate 10 trips with 3 guides
+GET {{url}}/populate/trips
 ###
 
 ###
 # Get all trips
-GET http://localhost:7070/api/trips
+GET {{url}}/trips
 ###
 # Get all guides
-GET http://localhost:7007/api/guides
+GET {{url}}/guides
 ###
 # Get all trips
-GET http://localhost:7007/api/mock/trips
+GET {{url}}/mock/trips
 #Authorization: Bearer {{token}}
 ###
 # Get a specific trip by ID (replace {{tripId}} with actual UUID from a previous GET response)
-GET http://localhost:7007/api/mock/trips/31410822-8df0-43e6-9be4-17b8ca361864
+GET {{url}}/mock/trips/31410822-8df0-43e6-9be4-17b8ca361864
 ###
 # Create a new trip
-POST http://localhost:7070/api/mock/trips
+POST {{url}}/mock/trips
 #Authorization: Bearer {{token}}
 
 {
@@ -32,7 +32,7 @@ POST http://localhost:7070/api/mock/trips
 }
 ###
 # Update an existing trip (replace {{tripId}} with actual UUID from a previous GET response)
-PUT http://localhost:7007/mock/trips/{{tripId}}
+PUT {{url}}/mock/trips/{{tripId}}
 Authorization: Bearer {{token}}
 
 {
@@ -53,11 +53,11 @@ Authorization: Bearer {{token}}
 }
 ###
 # Delete a trip by ID (replace {{tripId}} with actual UUID from a previous GET response)
-DELETE http://localhost:7007/api/mock/trips/sdfsdfsdf
+DELETE {{url}}/mock/trips/sdfsdfsdf
 #Authorization: Bearer {{token}}
 ###
 # Add a guide to an existing trip (replace {{tripId}} with the UUID of the trip and {{guideId}} with the UUID of the guide)
-POST http://localhost:7007/api/mock/trips/trip/7f912423-a1c1-4a43-aab6-62240aa7e228/guide/9dbcd0f3-2bf5-47d8-a0ba-91923f52900f
+POST {{url}}/mock/trips/trip/7f912423-a1c1-4a43-aab6-62240aa7e228/guide/9dbcd0f3-2bf5-47d8-a0ba-91923f52900f
 #Authorization: Bearer {{token}}
 
 {

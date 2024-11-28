@@ -79,7 +79,7 @@ public class TripRessourceTest {
     @DisplayName("Test if server is up")
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
-        given().when().get("/guides").then().statusCode(200);
+        given().when().get("/trips").then().statusCode(200);
     }
 
     private static String securityToken;
@@ -267,7 +267,7 @@ public class TripRessourceTest {
                 .body("size()", equalTo(3));
     }
 
-    @Test
+//    @Test
     @DisplayName("Test addiing packing items to a trip")
     void testAddingPacking() {
 

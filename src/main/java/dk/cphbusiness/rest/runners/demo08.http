@@ -34,7 +34,7 @@ GET http://{{url}}/person/
 ###
 GET http://{{url}}/person/name/Thomas
 ###
-GET http://localhost:7007/demoapp/api/context_response_demo/header
+GET http://{{url}}/demoapp/api/context_response_demo/header
 ###
 POST http://{{url}}/auth/register
 
@@ -53,16 +53,5 @@ POST http://{{url}}/auth/login
  client.global.set("token", response.body.token);
 %}
 
-###
-POST http://{{url}}/person
-Authorization: Bearer {{token}}
 
-{
-         "firstName": "Thomas",
-         "lastName": "Hartmann",
-         "email": "thomas@mail.com",
-         "birthDate": "1980-01-01",
-}
-###
-GET http://{{url}}/api/person/1
-Content-Type: application/json
+

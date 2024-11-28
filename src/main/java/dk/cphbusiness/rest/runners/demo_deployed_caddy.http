@@ -1,11 +1,11 @@
-POST http://{{url}}/auth/register
+POST {{url}}/auth/register
 
 {
     "username": "thomas",
     "password": "test123"
 }
 ###
-POST http://{{url}}/auth/login
+POST {{url}}/auth/login
 
 {
     "username": "thomas",
@@ -16,7 +16,7 @@ POST http://{{url}}/auth/login
 %}
 
 ###
-POST http://{{url}}/person
+POST {{url}}/person
 Authorization: Bearer {{token}}
 
 
@@ -27,4 +27,4 @@ Authorization: Bearer {{token}}
          "birthDate": "1980-01-01",
 }
 ###
-GET http://{{url}}/person/1
+GET {{url}}/mock/trips

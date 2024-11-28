@@ -80,7 +80,7 @@ public class HibernateConfig {
         props.put("hibernate.connection.driver_class", "org.postgresql.Driver");
         props.put("hibernate.hbm2ddl.auto", "update");
         props.put("hibernate.current_session_context_class", "thread");
-        props.put("hibernate.show_sql", "true");
+//        props.put("hibernate.show_sql", "true");
         props.put("hibernate.format_sql", "true");
         props.put("hibernate.use_sql_comments", "true");
         return props;
@@ -105,7 +105,7 @@ public class HibernateConfig {
         props.put("hibernate.connection.username", "postgres");
         props.put("hibernate.connection.password", "postgres");
         props.put("hibernate.archive.autodetection", "class");
-        props.put("hibernate.show_sql", "true");
+//        props.put("hibernate.show_sql", "true");
         props.put("hibernate.hbm2ddl.auto", "create-drop");
         return props;
     }

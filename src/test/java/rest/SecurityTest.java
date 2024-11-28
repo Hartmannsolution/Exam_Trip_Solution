@@ -113,6 +113,7 @@ public class SecurityTest {
                 .header("Authorization", "Bearer "+securityToken)
                 .when()
                 .get("/protected/user_demo").then()
+                .log().all()
                 .statusCode(200)
                 .body("msg", equalTo("Hello from USER Protected"));
     }
