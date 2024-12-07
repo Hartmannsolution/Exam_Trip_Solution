@@ -16,7 +16,7 @@ POST {{url}}/auth/login
 %}
 
 ###
-POST {{url}}/person
+GET {{url}}/trips/1
 Authorization: Bearer {{token}}
 
 

@@ -67,3 +67,25 @@ POST {{url}}/mock/trips/trip/7f912423-a1c1-4a43-aab6-62240aa7e228/guide/9dbcd0f3
     "phone": "55555555",
     "yearsOfExperience": 7
 }
+
+###
+POST  https://tripapi.cphbusinessapps.dk/api/auth/register
+
+{
+    "username": "user6",
+    "password": "test123"
+}
+###
+POST  https://tripapi.cphbusinessapps.dk/api/auth/login
+
+{
+    "username": "admin",
+    "password": "admin123"
+}
+> {%
+ client.global.set("token", response.body.token);
+%}
+
+###
+GET https://tripapi.cphbusinessapps.dk/api/guides
+Authorization: Bearer {{token}}

@@ -43,7 +43,7 @@ POST http://{{url}}/auth/register
     "password": "test123"
 }
 ###
-POST http://{{url}}/auth/login
+POST {{url}}/auth/login
 
 {
     "username": "user",
@@ -52,6 +52,15 @@ POST http://{{url}}/auth/login
 > {%
  client.global.set("token", response.body.token);
 %}
+
+###
+GET {{url}}/trips/30
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+GET {{url}}/guides
+Authorization: Bearer {{token}}
 
 
 

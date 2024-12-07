@@ -63,13 +63,14 @@ public class TripController implements IController {
     public Handler getById() {
         return ctx -> {
             Long id = Long.parseLong(ctx.pathParam("id"));
-            TripDTO trip = tripDAO.findById(id);
-            if (trip == null) {
+            try {
+                TripDTO trip = tripDAO.findById(id);
+                trip = addPackingItems(addPackingItems(trip));
+                ctx.status(HttpStatus.OK).json(trip);
+            } catch(EntityNotFoundException e) {
                 ctx.attribute("msg", "No trip with that id");
-                throw new ApiException(404, "No trip with that id");
+                throw new ApiException(404, e.getMessage());
             }
-            trip = addPackingItems(addPackingItems(trip));
-            ctx.status(HttpStatus.OK).json(trip);
         };
     }
 
