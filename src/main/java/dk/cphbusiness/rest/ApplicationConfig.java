@@ -17,6 +17,7 @@ import static io.javalin.apibuilder.ApiBuilder.path;
 
 import dk.cphbusiness.security.SecurityRoutes.Role;
 import io.javalin.json.JavalinJackson;
+import io.javalin.json.JsonMapper;
 
 /**
  * Purpose: To configure the Javalin server
@@ -130,9 +131,10 @@ public class ApplicationConfig {
     }
 
     public ApplicationConfig setGeneralExceptionHandling() {
+        ObjectNode on = jsonMapper.createObjectNode();
         app.exception(Exception.class, (e, ctx) -> {
             e.printStackTrace();
-            ctx.result(e.getMessage());
+            ctx.json(on.put("msg",e.getMessage()));
         });
         return appConfig;
     }
