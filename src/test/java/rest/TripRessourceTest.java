@@ -45,7 +45,7 @@ public class TripRessourceTest {
         RestRoutes restRoutes = new RestRoutes();
 
         // Setup test database using docker testcontainers
-        emf = HibernateConfig.getEntityManagerFactory();
+        emf = HibernateConfig.getEntityManagerFactoryForTest();
 
         // Start server
         appConfig = ApplicationConfig.
@@ -67,7 +67,7 @@ public class TripRessourceTest {
     static void afterAll() {
         HibernateConfig.setTestMode(false);
         appConfig.stopServer();
-        HibernateConfig.stopDBServer();
+//        HibernateConfig.stopDBServer();
     }
 
     @BeforeEach

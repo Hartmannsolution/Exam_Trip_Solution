@@ -69,14 +69,14 @@ POST {{url}}/mock/trips/trip/7f912423-a1c1-4a43-aab6-62240aa7e228/guide/9dbcd0f3
 }
 
 ###
-POST  https://tripapi.cphbusinessapps.dk/api/auth/register
+POST  {{url}}/auth/register
 
 {
     "username": "user6",
     "password": "test123"
 }
 ###
-POST  https://tripapi.cphbusinessapps.dk/api/auth/login
+POST  {{url}}/auth/login
 
 {
     "username": "admin",
@@ -87,5 +87,15 @@ POST  https://tripapi.cphbusinessapps.dk/api/auth/login
 %}
 
 ###
-GET https://tripapi.cphbusinessapps.dk/api/guides
+GET {{url}}/guides
 Authorization: Bearer {{token}}
+
+###
+GET {{url}}/trips
+Authorization: Bearer {{token}}
+
+
+###
+GET {{url}}/trips/5
+#Authorization: Bearer {{token}}
+

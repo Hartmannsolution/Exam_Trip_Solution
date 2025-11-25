@@ -50,7 +50,7 @@ public class SecurityTest {
         RestRoutes restRoutes = new RestRoutes();
 
         // Setup test database using docker testcontainers
-        emf = HibernateConfig.getEntityManagerFactory();
+        emf = HibernateConfig.getEntityManagerFactoryForTest();
 
         // Start server
         appConfig = ApplicationConfig
@@ -83,7 +83,7 @@ public class SecurityTest {
     static void afterAll() {
         HibernateConfig.setTestMode(false);
         appConfig.stopServer();
-        HibernateConfig.stopDBServer(); // close emf and set to null to avoid memory leaks and make ready for next test suite
+//        HibernateConfig.stopDBServer(); // close emf and set to null to avoid memory leaks and make ready for next test suite
     }
 
     @BeforeEach
