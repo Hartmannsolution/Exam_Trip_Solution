@@ -30,6 +30,7 @@ public class Populator {
     public Map<String, IIdProvider<String>> createUsersAndRoles(EntityManagerFactory emf) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
+            em.createQuery("DELETE FROM RefreshToken rt").executeUpdate();
             em.createQuery("DELETE FROM User u").executeUpdate();
             em.createQuery("DELETE FROM Role r").executeUpdate();
             User user = new User("user", "user123");

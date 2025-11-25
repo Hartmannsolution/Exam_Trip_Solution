@@ -9,7 +9,11 @@ import dk.cphbusiness.exceptions.ValidationException;
  */
 public interface ISecurityDAO {
     UserDTO getVerifiedUser(String username, String password) throws ValidationException;
+    UserDTO getTokenVerifiedUser(String username, String refreshToken) throws ValidationException;
     User createUser(String username, String password);
+    String addRefreshToken(String username); // if user allready has a valid token, return that
+    void invalidateRefreshToken(String username, String refreshToken) throws ValidationException;
+
     User addRoleToUser(String username, String role);
     User removeRoleFromUser(String username, String role);
 }

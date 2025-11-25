@@ -29,17 +29,17 @@ public class RestRoutes {
                     get("/users", (ctx)-> {new Populator().createUsersAndRoles(HibernateConfig.getEntityManagerFactory()); ctx.json("{\"msg\":\"Success\"}");}, Role.ANYONE);        // GET /mock/populate
                 });
                 path("guides", () -> {
-                    get("/", guideController.getAll(), Role.ADMIN);        // GET /mock/guides
-                    post("/", guideController.create(), Role.ADMIN);        // POST /mock/guides
-                    put("/{id}", guideController.update(), Role.ADMIN);    // PUT /mock/guides/:id
+                    get("/", guideController.getAll(), Role.ANYONE);        // GET /mock/guides
+                    post("/", guideController.create(), Role.ANYONE);        // POST /mock/guides
+                    put("/{id}", guideController.update(), Role.ANYONE);    // PUT /mock/guides/:id
                 });
                 path("trips", () -> {
                     get("/", tripController.getAll(), Role.ANYONE);        // GET /mock/trips
                     get("/sumOfTripsForGuides", tripController.getSumOfTripsByGuide(), Role.ANYONE);   // GET /mock/trips/:id
-                    get("/{id}", tripController.getById(), Role.USER);   // GET /mock/trips/:id
+                    get("/{id}", tripController.getById(), Role.ANYONE);   // GET /mock/trips/:id
                     get("/category/{category}", tripController.getFilteredTrips(), Role.ANYONE);   // GET /mock/trips/:id
-                    post("/", tripController.create(), Role.ADMIN);        // POST /mock/trips
-                    put("/{id}", tripController.update(), Role.ADMIN);    // PUT /mock/trips/:id
+                    post("/", tripController.create(), Role.ANYONE);        // POST /mock/trips
+                    put("/{id}", tripController.update(), Role.ANYONE);    // PUT /mock/trips/:id
                     delete("/{id}", tripController.delete(), Role.ANYONE); // DELETE /mock/trips/:id
                     put("/trip/{tripId}/guide/{guideId}", tripController.addGuideToTrip(), Role.ANYONE); // POST /mock/trips/:id/guide
                 });

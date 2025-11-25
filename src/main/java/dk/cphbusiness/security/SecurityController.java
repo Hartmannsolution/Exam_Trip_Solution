@@ -10,13 +10,11 @@ import dk.cphbusiness.persistence.model.User;
 import dk.cphbusiness.exceptions.NotAuthorizedException;
 import dk.cphbusiness.exceptions.ValidationException;
 import dk.cphbusiness.utils.Utils;
-import io.javalin.http.ForbiddenResponse;
-import io.javalin.http.Handler;
-import io.javalin.http.HttpStatus;
-import io.javalin.http.UnauthorizedResponse;
+import io.javalin.http.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -36,7 +34,9 @@ public class SecurityController implements ISecurityController {
     private static ISecurityDAO securityDAO;
     private static SecurityController instance;
 
+
     private SecurityController() {
+
     }
 
 
@@ -57,6 +57,10 @@ public class SecurityController implements ISecurityController {
                 UserDTO verifiedUser = securityDAO.getVerifiedUser(user.getUsername(), user.getPassword());
                 String token = createToken(verifiedUser);
 
+                // Add a refresh-token to the user and set it as a cookie to update the token
+                String refreshToken = securityDAO.addRefreshToken(verifiedUser.getUsername());
+                ctx.cookie(new Cookie("refresh-token", refreshToken, "/", 3600, false, 1, true));
+
                 ctx.status(200).json(returnObject
                         .put("token", token)
                         .put("username", verifiedUser.getUsername()));
@@ -66,6 +70,23 @@ public class SecurityController implements ISecurityController {
                 System.out.println(e.getMessage());
                 ctx.json(returnObject.put("msg", e.getMessage()));
             }
+        };
+    }
+
+    @Override
+    public Handler logout() {
+        return (ctx) -> {
+            String refreshToken = ctx.cookie("refresh-token");
+            if (refreshToken == null) {
+                throw new UnauthorizedResponse("No refresh token was found");
+            }
+            // Example: Get the username from a custom header
+            String username = ctx.header("X-Username");
+            if(username == null){
+                throw new UnauthorizedResponse("No username was found in the header");
+            }
+            securityDAO.invalidateRefreshToken(username, refreshToken);
+            ctx.status(200).json(objectMapper.createObjectNode().put("msg", "User was logged out"));
         };
     }
 
@@ -110,27 +131,31 @@ public class SecurityController implements ISecurityController {
 
             // If there is no token we do not allow entry
             String header = ctx.header("Authorization");
-            if (header == null) {
-                throw new UnauthorizedResponse("Authorization header is missing"); // UnauthorizedResponse is javalin 6 specific but response is not json!
-//                throw new dk.cphbusiness.exceptions.ApiException(401, "Authorization header is missing");
-            }
-
-            // If the Authorization Header was malformed, then no entry
-            String token = header.split(" ")[1];
-            if (token == null) {
-                throw new UnauthorizedResponse("Authorization header is malformed"); // UnauthorizedResponse is javalin 6 specific but response is not json!
-//                throw new dk.cphbusiness.exceptions.ApiException(401, "Authorization header is malformed");
-
-            }
-            UserDTO verifiedTokenUser = verifyToken(token);
-            if (verifiedTokenUser == null) {
-                throw new UnauthorizedResponse("Invalid user or token"); // UnauthorizedResponse is javalin 6 specific but response is not json!
-//                throw new dk.cphbusiness.exceptions.ApiException(401, "Invalid user or token");
-            }
+            UserDTO verifiedTokenUser = checkIfTokenIsValid(header);
             ctx.attribute("user", verifiedTokenUser); // -> ctx.attribute("user") in ApplicationConfig beforeMatched filter
         };
     }
 
+    private UserDTO checkIfTokenIsValid(String header) {
+        if (header == null) {
+            throw new UnauthorizedResponse("Authorization header is missing"); // UnauthorizedResponse is javalin 6 specific, and sends status 403.
+//                throw new dk.cphbusiness.exceptions.ApiException(401, "Authorization header is missing");
+        }
+
+        // If the Authorization Header was malformed, then no entry
+        String token = header.split(" ")[1];
+        if (token == null) {
+            throw new UnauthorizedResponse("Authorization header is malformed"); // UnauthorizedResponse is javalin 6 specific but response is not json!
+//                throw new dk.cphbusiness.exceptions.ApiException(401, "Authorization header is malformed");
+
+        }
+        UserDTO verifiedTokenUser = verifyToken(token);
+        if (verifiedTokenUser == null) {
+            throw new UnauthorizedResponse("Invalid user or token"); // UnauthorizedResponse is javalin 6 specific but response is not json!
+//                throw new dk.cphbusiness.exceptions.ApiException(401, "Invalid user or token");
+        }
+        return verifiedTokenUser;
+    }
     /**
      * Purpose: To check if the Authenticated user has the rights to access a protected endpoint
      *
@@ -169,18 +194,8 @@ public class SecurityController implements ISecurityController {
     public Handler verify() {
         return (ctx) -> {
             String header = ctx.header("Authorization");
-            if (header == null) {
-                throw new UnauthorizedResponse("Authorization header is missing");
-            }
-            String token = header.split(" ")[1];
-            if (token == null) {
-                throw new UnauthorizedResponse("Authorization header is malformed");
-            }
-            UserDTO verifiedTokenUser = verifyToken(token);
-            if (verifiedTokenUser == null) {
-                throw new UnauthorizedResponse("Invalid user or token");
-            }
-            ctx.status(200).json(objectMapper.createObjectNode().put("msg", "Token is valid"));
+            UserDTO verifiedUser = checkIfTokenIsValid(header);
+            ctx.status(200).json(objectMapper.createObjectNode().put("msg", "Token is valid").put("user", verifiedUser.getUsername()));
         };
     }
 
@@ -216,12 +231,35 @@ public class SecurityController implements ISecurityController {
             ZonedDateTime now = ZonedDateTime.now();
             Long difference = ztime.toEpochSecond() - now.toEpochSecond();
 
-
             ctx.status(200)
                     .json(objectMapper.createObjectNode()
                             .put("msg", "Token is valid until: " + ztime)
                             .put("expireTime", ztime.toOffsetDateTime().toString())
                             .put("secondsToLive", difference));
+        };
+    }
+
+    @Override
+    public Handler renewSession() {
+        return (ctx) -> {
+            String refreshToken = ctx.cookie("refresh-token");
+            System.out.println("refreshToken::::::::::::::: " + refreshToken);
+            if (refreshToken == null) {
+                throw new UnauthorizedResponse("No refresh token was found");
+            }
+            // Example: Get the username from a custom header
+            String username = ctx.header("X-Username");
+            if(username == null){
+                throw new UnauthorizedResponse("No username was found in the header");
+            }
+            UserDTO userDTO = securityDAO.getTokenVerifiedUser(username, refreshToken);
+            String token = createToken(userDTO);
+
+
+            ctx.status(200)
+                    .json(objectMapper.createObjectNode()
+                            .put("newToken", token)
+                            .put("username", userDTO.getUsername()));
         };
     }
 

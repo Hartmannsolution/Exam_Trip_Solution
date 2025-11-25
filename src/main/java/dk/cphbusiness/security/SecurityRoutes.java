@@ -22,6 +22,8 @@ public class SecurityRoutes {
                 post("/register", securityController.register(),Role.ANYONE);
                 get("/verify", securityController.verify() ,Role.ANYONE);
                 get("/tokenlifespan", securityController.timeToLive() ,Role.ANYONE);
+                get("/renewToken", securityController.renewSession() ,Role.ANYONE); // send username in header: "X-Username" and refreshToken in cookie: "refresh_token"
+                put("/logout", securityController.logout() ,Role.ANYONE); // send username in header: "X-Username" and refreshToken in cookie: "refresh_token"
 
             });
         };

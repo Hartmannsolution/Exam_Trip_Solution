@@ -25,7 +25,7 @@ public class HibernateConfig {
 
     private static EntityManagerFactory emfTest;
     public static EntityManagerFactory getEntityManagerFactory() {
-        if (emf == null)
+        if (emf == null || !emf.isOpen())
             emf = createEMF(false);
         return emf;
     }
@@ -34,12 +34,25 @@ public class HibernateConfig {
             emfTest = createEMF(true);
         return emfTest;
     }
+
+    public static void stopDBServer() {
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+            emf = null;
+        }
+        if (emfTest != null && emfTest.isOpen()) {
+            emfTest.close();
+            emfTest = null;
+        }
+    }
+
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Role.class);
         configuration.addAnnotatedClass(Trip.class);
         configuration.addAnnotatedClass(Guide.class);
+        configuration.addAnnotatedClass(RefreshToken.class);
     }
 
     private static EntityManagerFactory createEMF(boolean forTest) {

@@ -17,7 +17,10 @@ import jakarta.persistence.EntityManagerFactory;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +31,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.containsString;
 
-@Disabled
+//@Disabled
 public class SecurityTest {
 
     private static ApplicationConfig appConfig;
@@ -50,19 +53,29 @@ public class SecurityTest {
         emf = HibernateConfig.getEntityManagerFactory();
 
         // Start server
-        appConfig = ApplicationConfig.
-                getInstance()
+        appConfig = ApplicationConfig
+                .getInstance()
                 .initiateServer()
-                .checkSecurityRoles()
-                .setErrorHandling()
-                .setGeneralExceptionHandling()
-//                .setRoute(restRoutes.getOpenRoutes())
+                .checkSecurityRoles() // check for role when route is called
                 .setRoute(SecurityRoutes.getSecurityRoutes())
                 .setRoute(SecurityRoutes.getSecuredRoutes())
-//                .setRoute(restRoutes.personEntityRoutes) // A different way to get the EndpointGroup. Getting data from DB
-                .setCORS()
-                .setApiExceptionHandling()
+                .setRoute(new RestRoutes().getTripRoutes())
                 .startServer(7777)
+                .setCORS()
+                .setGeneralExceptionHandling()
+                .setApiExceptionHandling();
+//                getInstance()
+//                .initiateServer()
+//                .checkSecurityRoles()
+//                .setErrorHandling()
+//                .setGeneralExceptionHandling()
+////                .setRoute(restRoutes.getOpenRoutes())
+//                .setRoute(SecurityRoutes.getSecurityRoutes())
+//                .setRoute(SecurityRoutes.getSecuredRoutes())
+////                .setRoute(restRoutes.personEntityRoutes) // A different way to get the EndpointGroup. Getting data from DB
+//                .setCORS()
+//                .setApiExceptionHandling()
+//                .startServer(7777)
         ;
     }
 
@@ -70,6 +83,7 @@ public class SecurityTest {
     static void afterAll() {
         HibernateConfig.setTestMode(false);
         appConfig.stopServer();
+        HibernateConfig.stopDBServer(); // close emf and set to null to avoid memory leaks and make ready for next test suite
     }
 
     @BeforeEach
@@ -78,6 +92,8 @@ public class SecurityTest {
         populatedUsers = new Populator().createUsersAndRoles(emf);
         populatedTrips = new Populator().createTripsAndGuides(emf);
         // Setup DB Poems
+        securityToken = null;
+        refreshToken = null;
     }
 
     @Test
@@ -86,7 +102,9 @@ public class SecurityTest {
         System.out.println("Testing is server UP");
         given().when().get("/auth/test").then().statusCode(200);
     }
+
     private static String securityToken;
+    private static String refreshToken;
 
     private static void login(String username, String password) {
         ObjectNode objectNode = jsonMapper.createObjectNode()
@@ -94,13 +112,43 @@ public class SecurityTest {
                 .put("password", password);
         String loginInput = objectNode.toString();
         securityToken = given()
+                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .body(loginInput)
-                //.when().post("/api/login")
                 .when().post("/auth/login")
                 .then()
+                .log().all()
                 .extract().path("token");
-        System.out.println("TOKEN ---> " + securityToken);
+
+        refreshToken = given()
+                .header("Origin", "http://localhost:5173")
+                .contentType("application/json")
+                .body(loginInput)
+                .when().post("/auth/login")
+                .then()
+        .extract().cookie("refresh-token");
+        System.out.println("TOKEN: " + securityToken + " REFRESH: " + refreshToken);
+    }
+
+    @Test
+    @DisplayName("Test login ")
+    public void testLogin() {
+        login("admin", "admin123");
+        assertThat("Security token is not null", securityToken, notNullValue());
+        assertThat("Refresh token is not null", refreshToken, notNullValue());
+        // get the time from the token
+        securityToken = securityToken.split("\\.")[1];
+        securityToken = new String(Base64.getDecoder().decode(securityToken));
+        JsonPath jsonPath = new JsonPath(securityToken);
+        System.out.println("Token content: " + jsonPath.prettyPrint());
+        System.out.println("Expire time: " + jsonPath.getString("exp"));
+        // test that expire time is more than 25 minutes in the future
+        long expireTimeStamp = jsonPath.getLong("exp");
+        long currentTimeStamp = System.currentTimeMillis() / 1000;
+        LocalDateTime expireTime = LocalDateTime.ofEpochSecond(expireTimeStamp, 0, ZoneOffset.UTC);
+        LocalDateTime now = LocalDateTime.ofEpochSecond(currentTimeStamp, 0, ZoneOffset.UTC);
+        System.out.println("Expire time: " + expireTime + " Current time: " + now + " Diff: " + (expireTimeStamp - currentTimeStamp) + " seconds");
+        assertThat("Token is valid for about 5 minutes", expireTimeStamp, greaterThan(currentTimeStamp+290));
     }
 
     @Test
@@ -111,6 +159,7 @@ public class SecurityTest {
                 .contentType("application/json")
                 .accept("application/json")
                 .header("Authorization", "Bearer "+securityToken)
+                .header("Origin", "http://localhost:5173")
                 .when()
                 .get("/protected/user_demo").then()
                 .log().all()
@@ -126,6 +175,7 @@ public class SecurityTest {
                 .contentType("application/json")
                 .accept("application/json")
                 .header("Authorization", "Bearer "+securityToken)
+                .header("Origin", "http://localhost:5173")
                 .when()
                 .get("/protected/admin_demo").then()
                 .log().all()
@@ -137,12 +187,14 @@ public class SecurityTest {
     @DisplayName("Test CORS Headers")
     public void testCorsHeaders() {
         given()
+                .header("Origin", "http://localhost:5173")
                 .when()
                 .get("/auth/test")
                 .then()
-                .header("Access-Control-Allow-Origin", "*")
+                .log().all()
+                .header("Access-Control-Allow-Origin", "http://localhost:5173")
                 .header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-                .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+                .header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Username")
                 .statusCode(200);
     }
 
@@ -150,14 +202,15 @@ public class SecurityTest {
     @DisplayName("Test CORS Preflight against a protected route")
     public void testCorsPreflight() {
         given()
+                .header("Origin", "http://localhost:5173")
                 .when()
                 .header("Access-Control-Request-Method", "POST")
 //                .header("Origin", "http://localhost:7777")
                 .options("/protected/admin_demo")
                 .then()
-                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Origin", "http://localhost:5173")
                 .header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-                .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+                .header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Username")
                 .statusCode(200);
     }
 
@@ -166,6 +219,7 @@ public class SecurityTest {
     public void testVerifyEndpoint() {
         login("user", "user123");
         given()
+                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .accept("application/json")
                 .header("Authorization", "Bearer "+securityToken)
@@ -181,6 +235,7 @@ public class SecurityTest {
     public void testTimeToLive() {
         login("user", "user123");
         given()
+                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .accept("application/json")
                 .header("Authorization", "Bearer "+securityToken)
@@ -188,6 +243,41 @@ public class SecurityTest {
                 .get("/auth/tokenlifespan").then()
                 .log().all()
                 .statusCode(200)
-                .body("secondsToLive", is(both(greaterThan(1700)).and(lessThanOrEqualTo(1800))));
+                .body("secondsToLive", is(both(greaterThan(290)).and(lessThanOrEqualTo(300))));
+    }
+
+    @Test
+    @DisplayName("Test renew session")
+    public void testRenewSession() {
+        login("user", "user123");
+        given()
+                .header("Origin", "http://localhost:5173")
+                .header("X-Username", "user")
+                .contentType("application/json")
+                .accept("application/json")
+                .cookie("refresh-token", refreshToken)
+                .when()
+                .get("/auth/renewToken").then()
+                .log().all()
+                .statusCode(200)
+                .body("newToken", notNullValue());
+    }
+
+    @Test
+    @DisplayName("Test logout")
+    public void testLogout() {
+        login("user", "user123");
+        given()
+                .contentType("application/json")
+                .accept("application/json")
+                .cookie("refresh-token", refreshToken)
+                .header("X-Username", "user")
+                .header("Origin", "http://localhost:5173")
+                .header("X-Username", "user")
+                .when()
+                .put("/auth/logout").then()
+                .log().all()
+                .statusCode(200)
+                .body("msg", equalTo("User was logged out"));
     }
 }

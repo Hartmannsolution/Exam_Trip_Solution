@@ -11,9 +11,11 @@ import java.util.Set;
  */
 public interface ISecurityController {
     Handler login(); // to get a token
+    Handler logout(); // to invalidate a refreshToken
     Handler register(); // to get a user
     Handler authenticate(); // to verify roles inside token
     Handler authorize();
     Handler verify(); // to verify a token
     Handler timeToLive(); // to check how long a token is valid
+    Handler renewSession(); // if a valid refreshToken is received, the session is renewed
 }
