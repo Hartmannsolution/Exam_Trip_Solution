@@ -93,7 +93,7 @@ public class TripRessourceTest {
                 .put("password", password);
         String loginInput = objectNode.toString();
         securityToken = given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .body(loginInput)
                 //.when().post("/api/login")
@@ -108,7 +108,7 @@ public class TripRessourceTest {
     public void testEntitiesFromDB() {
         login("admin", "admin123");
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .accept("application/json")
                 .header("Authorization", "Bearer " + securityToken)
@@ -157,7 +157,7 @@ public class TripRessourceTest {
         }
 
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .accept("application/json")
                 .header("Authorization", "Bearer " + securityToken)
@@ -174,7 +174,7 @@ public class TripRessourceTest {
     public void testLogRequest() {
         System.out.println("Testing logging request details");
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .log().all()
                 .when().get("/trips")
                 .then().statusCode(200);
@@ -185,7 +185,7 @@ public class TripRessourceTest {
     public void testLogResponse() {
         System.out.println("Testing logging response details");
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .when().get("/trips")
                 .then().log().body().statusCode(200);
     }
@@ -198,7 +198,7 @@ public class TripRessourceTest {
         Long guideId = populatedTrips.get("guide2").getId();
 
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .pathParam("tripId", tripId)
                 .pathParam("guideId", guideId)
@@ -218,7 +218,7 @@ public class TripRessourceTest {
         Long guideId = 2L; // Assume this guide exists
 
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .pathParam("tripId", invalidTripId)
                 .pathParam("guideId", guideId)
@@ -237,7 +237,7 @@ public class TripRessourceTest {
         Long invalidGuideId = 999L; // ID that does not exist
 
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .pathParam("tripId", tripId)
                 .pathParam("guideId", invalidGuideId)
@@ -254,7 +254,7 @@ public class TripRessourceTest {
     void testFilterTripsByCategory() {
 
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .when()
                 .get("/trips/category/beach")
@@ -270,7 +270,7 @@ public class TripRessourceTest {
     void testSumOfPrices() {
 
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
                 .when()
                 .get("/trips/sumOfTripsForGuides")
@@ -281,13 +281,15 @@ public class TripRessourceTest {
                 .body("size()", equalTo(3));
     }
 
-//    @Test
+    @Test
     @DisplayName("Test addiing packing items to a trip")
     void testAddingPacking() {
+        login("user", "user123");
 
         given()
-                .header("Origin", "http://localhost:5173")
+//                .header("Origin", "http://localhost:5173")
                 .contentType("application/json")
+                .header("Authorization", "Bearer " + securityToken)
                 .when()
                 .get("/trips/"+((TripDTO) populatedTrips.get("trip1")).getId())
                 .then()

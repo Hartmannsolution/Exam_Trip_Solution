@@ -74,7 +74,7 @@ public class TripController implements IController {
         };
     }
 
-    private TripDTO addPackingItems(TripDTO trip) {
+    public TripDTO addPackingItems(TripDTO trip) {
         String category = trip.getCategory().toString();
         String url = "https://packingapi.cphbusinessapps.dk/packinglist/" + category.toLowerCase();
         System.out.println("URL: " + url);

@@ -1,6 +1,6 @@
 # Test MockTripRoutes API
 ### Populate 10 trips with 3 guides
-GET {{url}}/populate/trips
+GET {{url}}/mock/populate/trips
 ###
 
 ###
