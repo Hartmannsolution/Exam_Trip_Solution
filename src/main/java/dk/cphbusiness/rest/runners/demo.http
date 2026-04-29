@@ -7,6 +7,9 @@ GET {{url}}/populate/trips
 # Get all trips
 GET {{url}}/trips
 ###
+GET http://localhost:7070/api
+
+###
 # Get all guides
 GET {{url}}/guides
 ###

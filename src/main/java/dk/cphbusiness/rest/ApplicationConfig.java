@@ -19,6 +19,9 @@ import dk.cphbusiness.security.SecurityRoutes.Role;
 import io.javalin.json.JavalinJackson;
 import io.javalin.json.JsonMapper;
 
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -55,15 +58,51 @@ public class ApplicationConfig {
             config.bundledPlugins.enableDevLogging(); // enables extensive development logging in terminal
             config.staticFiles.add("/public"); // enables serving of static files from the public folder in the classpath. PROs: easy to use, CONs: you have to restart the server every time you change a file
             config.http.defaultContentType = "application/json"; // default content type for requests
-            config.router.contextPath = "/api"; // base path for all routes
-            config.bundledPlugins.enableRouteOverview("/routes", Role.ADMIN); // html overview of all registered routes at /routes for api documentation: https://javalin.io/news/2019/08/11/javalin-3.4.1-released.html
+            config.router.contextPath = "/"; // keep the application root available for static files
+            config.bundledPlugins.enableRouteOverview("/api/routes", Role.ADMIN); // html overview of all registered routes at /api/routes for api documentation: https://javalin.io/news/2019/08/11/javalin-3.4.1-released.html
         });
+        app.get("/", ctx -> {
+            try (InputStream index = ApplicationConfig.class.getClassLoader().getResourceAsStream("public/index.html")) {
+                if (index == null) {
+                    ctx.status(404).result("Default page not found");
+                    return;
+                }
+                ctx.contentType("text/html; charset=UTF-8").result(index.readAllBytes());
+            }
+        });
+        app.get("/api", ctx -> ctx.json(Map.of(
+                "message", "Welcome to the Exam Trip Solution API",
+                "endpoints", List.of(
+                        "GET /api/auth/test",
+                        "POST /api/auth/login",
+                        "POST /api/auth/register",
+                        "GET /api/auth/verify",
+                        "GET /api/auth/tokenlifespan",
+                        "GET /api/auth/renewToken",
+                        "PUT /api/auth/logout",
+                        "GET /api/trips",
+                        "GET /api/trips/{id}",
+                        "GET /api/trips/category/{category}",
+                        "GET /api/trips/sumOfTripsForGuides",
+                        "POST /api/trips",
+                        "PUT /api/trips/{id}",
+                        "DELETE /api/trips/{id}",
+                        "PUT /api/trips/trip/{tripId}/guide/{guideId}",
+                        "GET /api/guides",
+                        "POST /api/guides",
+                        "PUT /api/guides/{id}",
+                        "GET /api/mock/reset",
+                        "GET /api/mock/trips",
+                        "GET /api/mock/guides",
+                        "GET /api/routes"
+                )
+        )));
         return appConfig;
     }
 
     public ApplicationConfig setRoute(EndpointGroup route) {
         javalinConfig.router.apiBuilder(() -> {
-            path("", route);
+            path("api", route);
         });
         return appConfig;
     }
