@@ -45,26 +45,26 @@ public class TripMockController implements IController {
         // Initialize Trips and assign them to guides
         TripDTO trip1 = new TripDTO(
                 tripIdCounter++, // Use counter to generate ID
-                LocalDateTime.of(2024, 5, 10, 9, 0),
-                LocalDateTime.of(2024, 5, 10, 17, 0),
+                LocalDateTime.of(2025, 5, 10, 9, 10),
+                LocalDateTime.of(2025, 5, 10, 10, 20),
                 12.34, 56.78, "Beach Day", 150.00, guide1.getId(), Trip.TripCategory.BEACH, guide1);
 
-        TripDTO trip2 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 6, 15, 10, 0), LocalDateTime.of(2024, 6, 15, 18, 0),
+        TripDTO trip2 = new TripDTO(tripIdCounter++, LocalDateTime.of(2026, 6, 15, 10, 0), LocalDateTime.of(2026, 6, 15, 20, 30),
                 13.45, 57.89, "City Tour", 200.00, guide1.getId(), Trip.TripCategory.CITY, guide1);
 
-        TripDTO trip3 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 7, 20, 8, 0), LocalDateTime.of(2024, 7, 20, 16, 0),
+        TripDTO trip3 = new TripDTO(tripIdCounter++, LocalDateTime.of(2026, 7, 20, 8, 0), LocalDateTime.of(2026, 7, 20, 16, 0),
                 14.56, 58.90, "Forest Adventure", 180.00, guide2.getId(), Trip.TripCategory.FOREST, guide2);
 
-        TripDTO trip4 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 8, 25, 9, 0), LocalDateTime.of(2024, 8, 25, 17, 0),
+        TripDTO trip4 = new TripDTO(tripIdCounter++, LocalDateTime.of(2027, 8, 25, 9, 0), LocalDateTime.of(2027, 8, 25, 14, 0),
                 15.67, 59.01, "Lake Visit", 220.00, guide2.getId(), Trip.TripCategory.LAKE, guide2);
 
-        TripDTO trip5 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 9, 5, 7, 0), LocalDateTime.of(2024, 9, 5, 15, 0),
+        TripDTO trip5 = new TripDTO(tripIdCounter++, LocalDateTime.of(2028, 9, 5, 7, 0), LocalDateTime.of(2028, 9, 5, 19, 20),
                 16.78, 60.12, "Mountain Hike", 250.00, guide3.getId(), Trip.TripCategory.SEA, guide3);
-        TripDTO trip6 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 10, 10, 6, 0), LocalDateTime.of(2024, 10, 10, 14, 0),
+        TripDTO trip6 = new TripDTO(tripIdCounter++, LocalDateTime.of(2028, 10, 10, 6, 0), LocalDateTime.of(2028, 10, 10, 14, 40),
                 17.89, 61.23, "Desert Safari", 300.00, guide4.getId(), Trip.TripCategory.BEACH, guide4);
-        TripDTO trip7 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 11, 15, 5, 0), LocalDateTime.of(2024, 11, 15, 13, 0),
+        TripDTO trip7 = new TripDTO(tripIdCounter++, LocalDateTime.of(2029, 11, 15, 5, 0), LocalDateTime.of(2029, 11, 11, 13, 30),
                 18.90, 62.34, "Jungle Expedition", 350.00, guide3.getId(), Trip.TripCategory.FOREST, guide3);
-        TripDTO trip8 = new TripDTO(tripIdCounter++, LocalDateTime.of(2024, 12, 20, 4, 0), LocalDateTime.of(2024, 12, 20, 12, 0),
+        TripDTO trip8 = new TripDTO(tripIdCounter++, LocalDateTime.of(2029, 12, 20, 4, 0), LocalDateTime.of(2029, 12, 20, 12, 0),
                 19.01, 63.45, "Snow Trekking", 400.00, guide4.getId(), Trip.TripCategory.SNOW, guide4);
 
         // Assign trips to guides' list of trips
