@@ -20,7 +20,7 @@
         <junit.version>5.9.1</junit.version>
         <hamcrest.version>2.0.0.0</hamcrest.version>
         <restassured.version>5.5.0</restassured.version>
-        <testcontainers.version>1.18.0</testcontainers.version>
+        <testcontainers.version>1.21.4</testcontainers.version>
 <!--        <logging.version>2.14.1</logging.version>-->
 <!--        <jwt.version>9.0.1</jwt.version>-->
         <token.security.version>1.0.2</token.security.version>
